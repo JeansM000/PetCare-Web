@@ -1,0 +1,35 @@
+﻿@page "/productos"
+@attribute [Authorize]
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Productos | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Inventario</span><h1>Productos</h1><p>Administra el catálogo de medicamentos y productos.</p></div><button class="saas-primary-button" type="button"><i data-lucide="package-plus" aria-hidden="true"></i> Nuevo producto</button></div>
+
+@if (Rows is null)
+{
+    <div class="loading-state">Cargando productos...</div>
+}
+else
+{
+    <div class="data-card">
+        <div class="data-card-header"><strong>Catálogo de productos</strong><span>@Rows.Count registros</span></div>
+        <div class="table-scroll">
+            <table class="saas-table">
+                <thead><tr><th>Código</th><th>Producto</th><th>Precio unidad</th><th>Vencimiento</th></tr></thead>
+                <tbody>
+                    @foreach (var row in Rows)
+                    {
+                        <tr><td class="table-primary">@row.Code</td><td>@row.Name</td><td>@row.UnitPrice.ToString("C2")</td><td>@(row.ExpirationDate?.ToString("dd/MM/yyyy") ?? "Sin fecha")</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow>? Rows;
+
+    protected override async Task OnInitializedAsync() => Rows = await Data.GetProductsAsync();
+}

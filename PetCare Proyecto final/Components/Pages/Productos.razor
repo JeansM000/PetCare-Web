@@ -1,0 +1,44 @@
+@page "/lotes"
+@attribute [Authorize(Roles = "Director,Recepcionista,Veterinario")]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Lotes | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Inventario</span><h1>Lotes de medicamentos</h1><p>Registra lotes y controla sus fechas de vencimiento.</p></div></div>
+@if (!string.IsNullOrEmpty(Message) && !IsCreateOpen){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+@if (CanOperate)
+{
+    <button class="saas-primary-button modal-trigger" type="button" @onclick="OpenCreate"><i data-lucide="package-plus" aria-hidden="true"></i> Nuevo lote</button>
+    @if (IsCreateOpen)
+    {
+        <div class="modal-backdrop" role="presentation" @onclick="CloseCreate">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="new-product-title" @onclick:stopPropagation="true">
+                <div class="modal-header"><div><span class="page-eyebrow">Inventario</span><h2 id="new-product-title">Registrar lote</h2></div><button class="modal-close" type="button" aria-label="Cerrar" @onclick="CloseCreate">×</button></div>
+                @if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+                <EditForm Model="NewProduct" OnValidSubmit="CreateAsync" OnInvalidSubmit="ShowValidationError"><DataAnnotationsValidator /><div class="form-grid"><div class="field"><label>Código automático</label><input class="readonly-field" value="MED-######" readonly /></div><div class="field"><label>Medicamento</label><InputText @bind-Value="NewProduct.Name" maxlength="100" /></div><div class="field"><label>Número de lote</label><InputText @bind-Value="NewProduct.BatchNumber" maxlength="40" /></div><div class="field"><label>Precio unidad</label><InputNumber @bind-Value="NewProduct.UnitPrice" /></div><div class="field"><label>Vencimiento</label><InputDate @bind-Value="NewProduct.ExpirationDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" /></div><div class="field"><label>Cantidad</label><InputNumber @bind-Value="NewProduct.Quantity" /></div></div><button class="saas-primary-button" type="submit"><i data-lucide="package-plus" aria-hidden="true"></i> Registrar lote</button></EditForm>
+            </div>
+        </div>
+    }
+}
+ @if (Rows is null){<div class="loading-state">Cargando lotes...</div>}else{<div class="search-bar"><label for="lot-search">Buscar medicamento, código o lote<input id="lot-search" @bind="Search" placeholder="Escribe para filtrar" /></label></div><div class="data-card"><div class="data-card-header"><strong>Medicamentos registrados</strong><span>@FilteredRows.Count lotes</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Código</th><th>Medicamento</th><th>Lote</th><th>Precio</th><th>Vencimiento</th><th>Cantidad</th><th>Estado</th><th></th></tr></thead><tbody>@foreach (var row in FilteredRows){<tr class="@(row.IsExpired ? "expired-row" : string.Empty)"><td class="table-primary">@row.Code</td><td>@row.Name</td><td>@row.BatchNumber</td><td>@row.UnitPrice.ToString("N2")</td><td>@row.ExpirationDate?.ToString("dd/MM/yyyy")</td><td>@row.Quantity</td><td><span class="@(row.IsExpired ? "cancelled-badge" : "status-badge")">@(row.IsExpired ? "Vencido" : "Vigente")</span></td><td>@if(CanOperate){<button class="danger-action" type="button" @onclick="() => DeleteAsync(row.Id)"><i data-lucide="trash-2" aria-hidden="true"></i> Borrar</button>}</td></tr>}</tbody></table></div></div>}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow>? Rows;
+    private ProductModel NewProduct { get; set; } = new(){ExpirationDate=DateTime.Today.AddMonths(6),Quantity=1};
+    private string? Message; private bool IsError;
+    private string Search { get; set; } = string.Empty;
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow> FilteredRows => string.IsNullOrWhiteSpace(Search) ? Rows ?? [] : (Rows ?? []).Where(x => x.Name.Contains(Search, StringComparison.OrdinalIgnoreCase) || x.Code.Contains(Search, StringComparison.OrdinalIgnoreCase) || (x.BatchNumber?.Contains(Search, StringComparison.OrdinalIgnoreCase) ?? false)).ToList();
+    private bool IsCreateOpen;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private bool CanOperate => ActorRole is "Director" or "Recepcionista";
+    protected override async Task OnInitializedAsync()=>await ReloadAsync();
+    private async Task ReloadAsync()=>Rows=await Data.GetProductsAsync();
+    private async Task CreateAsync(){try{await Data.CreateProductAsync(ActorRole,new(string.Empty,NewProduct.Name,NewProduct.UnitPrice,NewProduct.ExpirationDate,NewProduct.BatchNumber,NewProduct.Quantity));Message="Lote registrado correctamente.";IsError=false;NewProduct=new(){ExpirationDate=DateTime.Today.AddMonths(6),Quantity=1};IsCreateOpen=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private void OpenCreate(){Message=null;IsCreateOpen=true;}
+    private void CloseCreate(){IsCreateOpen=false;}
+    private async Task DeleteAsync(int id){try{await Data.DeleteProductAsync(ActorRole,id);Message="Medicamento eliminado correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private void ShowValidationError(){Message="Medicamento, lote, precio, vencimiento y cantidad son obligatorios. La fecha de vencimiento no puede ser anterior a hoy y el precio y la cantidad deben ser mayores que cero.";IsError=true;}
+    private sealed class ProductModel{[Required]public string Name{get;set;}=string.Empty;[Required]public string BatchNumber{get;set;}=string.Empty;[Range(0.01,double.MaxValue)]public decimal UnitPrice{get;set;}[Required]public DateTime ExpirationDate{get;set;}[Range(1,int.MaxValue)]public int Quantity{get;set;}}
+}

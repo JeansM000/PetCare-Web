@@ -1,0 +1,97 @@
+﻿IF DB_ID(N'PetCareWeb') IS NULL
+BEGIN
+	CREATE DATABASE PetCareWeb;
+END
+GO
+
+USE PetCareWeb;
+GO
+
+IF OBJECT_ID(N'dbo.Usuarios', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Usuarios (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		Nombreusuario NVARCHAR(50) NOT NULL UNIQUE,
+		NombreCompleto NVARCHAR(100) NOT NULL,
+		ContrasenaHash NVARCHAR(200) NOT NULL,
+		Rol NVARCHAR(20) NOT NULL,
+		CONSTRAINT CHK_Rol CHECK (Rol IN ('Recepcionista', 'Administrador'))
+	);
+END
+GO
+
+IF OBJECT_ID(N'dbo.Servicios', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Servicios (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		Codigo NVARCHAR(20) NOT NULL UNIQUE,
+		Tipo NVARCHAR(28) NOT NULL,
+		NombreMascota NVARCHAR(80) NOT NULL,
+		Fecha DATETIME2 NOT NULL,
+		DuracionMinutos INT NULL,
+		VeterinarioAsignado NVARCHAR(100) NULL,
+		TarifaDiaria DECIMAL(18,2) NULL,
+		FechaAlta DATETIME2 NULL,
+		CONSTRAINT CHK_Servicios_Tipo CHECK (Tipo IN ('Cita', 'Hospitalizacion')),
+		CONSTRAINT CHK_Cita_Duracion CHECK (Tipo <> 'Cita' OR (DuracionMinutos BETWEEN 15 AND 180)),
+		CONSTRAINT CHK_Hosp_Tarifa CHECK (Tipo <> 'Hospitalizacion' OR TarifaDiaria > 0),
+		CONSTRAINT CHK_FechaAlta CHECK (FechaAlta IS NULL OR FechaAlta >= Fecha)
+	);
+END
+GO
+
+IF OBJECT_ID(N'dbo.Productos', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Productos (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		Codigo NVARCHAR(20) NOT NULL UNIQUE,
+		Tipo NVARCHAR(30) NOT NULL,
+		Nombre NVARCHAR(100) NOT NULL,
+		PrecioUnidad DECIMAL(18,2) NOT NULL,
+		FechaVencimiento DATE NULL,
+		CONSTRAINT CHK_Productos_Tipo CHECK (Tipo IN ('LoteMedicamento')),
+		CONSTRAINT CHK_Lote_Fecha CHECK (Tipo <> 'LoteMedicamento' OR FechaVencimiento IS NOT NULL),
+		CONSTRAINT CHK_PrecioUnidad CHECK (PrecioUnidad > 0)
+	);
+END
+GO
+
+IF OBJECT_ID(N'dbo.Facturas', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Facturas (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		Numero NVARCHAR(20) NOT NULL UNIQUE,
+		FechaEmision DATETIME2 NOT NULL,
+		NombreCliente NVARCHAR(100) NOT NULL,
+		EstaAnulada BIT NOT NULL DEFAULT 0,
+		UsuarioEmisorId INT NOT NULL,
+		CONSTRAINT FK_Facturas_Usuarios FOREIGN KEY (UsuarioEmisorId)
+			REFERENCES dbo.Usuarios(Id) ON DELETE NO ACTION
+	);
+END
+GO
+
+IF OBJECT_ID(N'dbo.LineasFactura', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.LineasFactura (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		FacturaId INT NOT NULL,
+		ServicioId INT NULL,
+		ProductoId INT NULL,
+		Cantidad INT NOT NULL,
+		PrecioUnitario DECIMAL(18,2) NOT NULL,
+		CONSTRAINT FK_Lineas_Facturas FOREIGN KEY (FacturaId)
+			REFERENCES dbo.Facturas(Id) ON DELETE CASCADE,
+		CONSTRAINT FK_Lineas_Servicios FOREIGN KEY (ServicioId)
+			REFERENCES dbo.Servicios(Id) ON DELETE NO ACTION,
+		CONSTRAINT FK_Lineas_Productos FOREIGN KEY (ProductoId)
+			REFERENCES dbo.Productos(Id) ON DELETE NO ACTION,
+		CONSTRAINT CHK_Cantidad CHECK (Cantidad > 0),
+		CONSTRAINT CHK_PrecioUnitario_Linea CHECK (PrecioUnitario >= 0),
+		CONSTRAINT CHK_OrigenExclusivo CHECK (
+			(ServicioId IS NOT NULL AND ProductoId IS NULL) OR
+			(ServicioId IS NULL AND ProductoId IS NOT NULL)
+		)
+	);
+END
+GO

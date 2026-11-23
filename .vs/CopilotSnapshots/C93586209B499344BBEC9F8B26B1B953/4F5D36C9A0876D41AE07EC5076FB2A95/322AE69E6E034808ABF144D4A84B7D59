@@ -1,0 +1,125 @@
+﻿using System.Data;
+using System.Security.Cryptography;
+using Microsoft.Data.SqlClient;
+
+namespace PetCare_Proyecto_final.Data;
+
+public sealed class PetCareDataService(IConfiguration configuration)
+{
+    private readonly string _connectionString = configuration.GetConnectionString("PetCareWeb")
+        ?? throw new InvalidOperationException("No se encontró la cadena de conexión PetCareWeb.");
+
+    public async Task<AuthenticatedUser?> ValidateCredentialsAsync(string username, string password)
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT Id, Nombreusuario, NombreCompleto, Rol, ContrasenaHash FROM dbo.Usuarios WHERE Nombreusuario = @username", connection);
+        command.Parameters.Add("@username", SqlDbType.NVarChar, 50).Value = username.Trim();
+
+        await using var reader = await command.ExecuteReaderAsync();
+        if (!await reader.ReadAsync() || !VerifyPassword(password, reader.GetString(4)))
+        {
+            return null;
+        }
+
+        return new AuthenticatedUser(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+    }
+
+    public async Task<DashboardSummary> GetDashboardSummaryAsync()
+    {
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT (SELECT COUNT(*) FROM dbo.Usuarios), (SELECT COUNT(*) FROM dbo.Servicios), (SELECT COUNT(*) FROM dbo.Productos), (SELECT COUNT(*) FROM dbo.Facturas), (SELECT COUNT(*) FROM dbo.Servicios WHERE Tipo = 'Cita'), (SELECT COUNT(*) FROM dbo.Servicios WHERE Tipo = 'Hospitalizacion')", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        await reader.ReadAsync();
+        return new DashboardSummary(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5));
+    }
+
+    public async Task<IReadOnlyList<UserRow>> GetUsersAsync()
+    {
+        var rows = new List<UserRow>();
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT Id, Nombreusuario, NombreCompleto, Rol FROM dbo.Usuarios ORDER BY NombreCompleto", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            rows.Add(new UserRow(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
+        }
+
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<ServiceRow>> GetServicesAsync()
+    {
+        var rows = new List<ServiceRow>();
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT Codigo, Tipo, NombreMascota, Fecha, VeterinarioAsignado FROM dbo.Servicios ORDER BY Fecha DESC", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            rows.Add(new ServiceRow(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetDateTime(3), reader.IsDBNull(4) ? null : reader.GetString(4)));
+        }
+
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<ProductRow>> GetProductsAsync()
+    {
+        var rows = new List<ProductRow>();
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT Codigo, Nombre, PrecioUnidad, FechaVencimiento FROM dbo.Productos ORDER BY Nombre", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            rows.Add(new ProductRow(reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), reader.IsDBNull(3) ? null : reader.GetDateTime(3)));
+        }
+
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<InvoiceRow>> GetInvoicesAsync()
+    {
+        var rows = new List<InvoiceRow>();
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        await using var command = new SqlCommand("SELECT f.Numero, f.FechaEmision, f.NombreCliente, f.EstaAnulada, u.Nombreusuario FROM dbo.Facturas f INNER JOIN dbo.Usuarios u ON u.Id = f.UsuarioEmisorId ORDER BY f.FechaEmision DESC", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            rows.Add(new InvoiceRow(reader.GetString(0), reader.GetDateTime(1), reader.GetString(2), reader.GetBoolean(3), reader.GetString(4)));
+        }
+
+        return rows;
+    }
+
+    private static bool VerifyPassword(string password, string storedValue)
+    {
+        var parts = storedValue.Split('$');
+        if (parts.Length != 4 || parts[0] != "PBKDF2-SHA256" || !int.TryParse(parts[1], out var iterations))
+        {
+            return false;
+        }
+
+        try
+        {
+            var salt = Convert.FromBase64String(parts[2]);
+            var expected = Convert.FromBase64String(parts[3]);
+            var actual = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expected.Length);
+            return CryptographicOperations.FixedTimeEquals(actual, expected);
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
+    }
+
+    public sealed record AuthenticatedUser(int Id, string Username, string FullName, string Role);
+    public sealed record DashboardSummary(int Users, int Services, int Products, int Invoices, int Appointments, int Hospitalizations);
+    public sealed record UserRow(int Id, string Username, string FullName, string Role);
+    public sealed record ServiceRow(string Code, string Type, string PetName, DateTime Date, string? Veterinarian);
+    public sealed record ProductRow(string Code, string Name, decimal UnitPrice, DateTime? ExpirationDate);
+    public sealed record InvoiceRow(string Number, DateTime IssuedAt, string Customer, bool IsCancelled, string IssuedBy);
+}

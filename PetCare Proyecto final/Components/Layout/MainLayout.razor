@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+
+<div class="saas-shell">
+    <button class="mobile-menu-toggle" type="button" aria-label="Abrir menú" @onclick="ToggleMenu">☰</button>
+    <aside class="sidebar @MenuClass">
+        <NavMenu />
+    </aside>
+
+    <section class="saas-main">
+        <header class="top-row">
+            <div>
+                <span class="top-row-label">Panel de gestión</span>
+                <strong>PetCare</strong>
+            </div>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="current-user">
+                        <span class="user-avatar"><i data-lucide="user-round" aria-hidden="true"></i></span>
+                        <span><small>Sesión iniciada</small><strong>@context.User.Identity?.Name</strong></span>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        </header>
+
+        <main class="content">
+            @Body
+        </main>
+    </section>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    <span>Se produjo un error inesperado.</span>
+    <a class="reload" href=".">Recargar</a>
+    <span class="dismiss">×</span>
+</div>
+
+@code {
+    private bool MenuOpen;
+    private string MenuClass => MenuOpen ? "menu-open" : string.Empty;
+    private void ToggleMenu() => MenuOpen = !MenuOpen;
+}

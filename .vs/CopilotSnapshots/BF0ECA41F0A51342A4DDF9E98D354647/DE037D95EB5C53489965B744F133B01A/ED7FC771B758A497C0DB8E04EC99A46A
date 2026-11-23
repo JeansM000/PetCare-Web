@@ -1,0 +1,13 @@
+﻿# Uso de IA
+
+La IA se utilizó como apoyo para revisar el código frente a las historias de usuario, detectar errores de flujo, proponer validaciones y preparar correcciones. Las decisiones finales y la verificación de compilación deben ser revisadas y explicadas por el equipo.
+
+Cambios revisados:
+
+- Mostrar lotes vencidos para que puedan distinguirse sin permitir su venta.
+- Permitir confirmar veterinarios desde la pantalla de servicios.
+- Tomar el nombre del usuario autenticado al crear una factura.
+- Usar cantidad únicamente para medicamentos.
+- Mejorar las descripciones de los renglones y los mensajes de validación.
+- Corregir el parámetro faltante al crear hospitalizaciones.
+- Actualizar `Microsoft.Data.SqlClient` para eliminar una vulnerabilidad transitiva conocida.

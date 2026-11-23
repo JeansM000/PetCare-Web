@@ -1,0 +1,54 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<div class="form-card">
+	<div class="form-card-header"><div><span class="page-eyebrow">Nuevo registro</span><h2>Registrar servicio</h2></div></div>
+	<EditForm Model="Model" OnValidSubmit="SubmitAsync">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		<div class="form-grid">
+			<div class="field"><label for="service-code">Código</label><InputText id="service-code" @bind-Value="Model.Code" maxlength="20" /></div>
+			<div class="field"><label for="service-type">Tipo</label><InputSelect id="service-type" @bind-Value="Model.Type"><option value="Cita">Cita</option><option value="Hospitalizacion">Hospitalización</option></InputSelect></div>
+			<div class="field"><label for="pet-name">Nombre de mascota</label><InputText id="pet-name" @bind-Value="Model.PetName" maxlength="80" /></div>
+			<div class="field"><label for="service-date">Fecha y hora de ingreso/cita</label><InputDate id="service-date" @bind-Value="Model.Date" Type="InputDateType.DateTimeLocal" /></div>
+			<div class="field"><label for="veterinarian">Veterinario</label><InputSelect id="veterinarian" @bind-Value="Model.VeterinarianId"><option value="0">Selecciona un veterinario</option>@foreach (var vet in Veterinarians)<option value="@vet.Id">@vet.Name</option></InputSelect></div>
+			@if (Model.Type == "Cita")
+			{
+				<div class="field"><label for="duration">Duración (minutos)</label><InputNumber id="duration" @bind-Value="Model.DurationMinutes" min="45" max="180" /></div>
+			}
+			else
+			{
+				<div class="field"><label for="cage">Jaula y tarifa diaria</label><InputSelect id="cage" @bind-Value="Model.CageId"><option value="0">Selecciona una jaula</option>@foreach (var cage in Cages.Where(x => x.Active))<option value="@cage.Id">@cage.Size - @cage.DailyRate.ToString("N0") diarios</option></InputSelect></div>
+			}
+		</div>
+		<button class="saas-primary-button" type="submit"><i data-lucide="save" aria-hidden="true"></i> Registrar</button>
+	</EditForm>
+</div>
+
+@code {
+	[Parameter] public IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.VetOption> Veterinarians { get; set; } = [];
+	[Parameter] public IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.CageRow> Cages { get; set; } = [];
+	[Parameter] public EventCallback<ServiceFormModel> OnSubmit { get; set; }
+
+	private ServiceFormModel Model { get; set; } = NewModel();
+
+	private async Task SubmitAsync()
+	{
+		await OnSubmit.InvokeAsync(Model);
+		Model = NewModel();
+	}
+
+	private static ServiceFormModel NewModel() => new() { Date = DateTime.Now.AddHours(1), DurationMinutes = 45 };
+
+	public sealed class ServiceFormModel
+	{
+		[Required(ErrorMessage = "El código es obligatorio.")]
+		public string Code { get; set; } = string.Empty;
+		[Required(ErrorMessage = "La mascota es obligatoria.")]
+		public string PetName { get; set; } = string.Empty;
+		public string Type { get; set; } = "Cita";
+		[Required] public DateTime Date { get; set; }
+		[Range(45, 180, ErrorMessage = "La cita debe durar entre 45 y 180 minutos.")] public int DurationMinutes { get; set; } = 45;
+		[Range(1, int.MaxValue, ErrorMessage = "Selecciona un veterinario.")] public int VeterinarianId { get; set; }
+		public int CageId { get; set; }
+	}
+}

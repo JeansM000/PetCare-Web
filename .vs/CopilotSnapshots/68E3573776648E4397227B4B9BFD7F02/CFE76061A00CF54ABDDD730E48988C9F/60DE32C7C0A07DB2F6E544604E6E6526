@@ -1,0 +1,24 @@
+﻿# Diseño de PetCare
+
+## Arquitectura
+
+La aplicación usa Blazor Web App con renderizado interactivo de servidor. Las páginas Razor manejan la interacción y reciben `PetCareDataService` por inyección de dependencias; no crean conexiones desde la interfaz.
+
+`PetCareDataService` concentra las operaciones de persistencia, validaciones de negocio y autorización de operaciones. Las páginas usan modelos de entrada y el componente reutilizable `ServiceForm`, que recibe `Parameter` y comunica el resultado mediante `EventCallback`.
+
+## Reglas principales
+
+- Solo Director puede cambiar roles y anular facturas.
+- Citas: duración entre 15 y 180 minutos; una cita nueva empieza con 30 minutos.
+- Se pueden registrar lotes ya vencidos (control de bodega), pero no se pueden facturar.
+- Al anular una factura, las unidades de medicamento de sus renglones vuelven al lote; los servicios no cambian.
+- No se venden lotes vencidos ni cantidades superiores a las existencias.
+- Una factura anulada no puede modificarse.
+- Las consultas y hospitalizaciones pueden facturarse nuevamente después de anular una factura.
+- Las contraseñas usan PBKDF2-SHA256 con sal aleatoria y comparación en tiempo constante.
+
+## Persistencia
+
+El esquema inicial y la ampliación operativa se encuentran en `Database/PetCareWeb.sql` y `Database/PetCareWeb_Migration_Operaciones.sql`. La aplicación accede a SQL Server mediante comandos parametrizados y transacciones para la creación de facturas.
+
+> Pendiente de migración académica: el documento de requisitos solicita Entity Framework Core Code First y migraciones EF. Esta versión conserva los scripts SQL operativos existentes; para declarar cumplimiento total de ese punto hay que sustituirlos por un `DbContext` y migraciones EF equivalentes.

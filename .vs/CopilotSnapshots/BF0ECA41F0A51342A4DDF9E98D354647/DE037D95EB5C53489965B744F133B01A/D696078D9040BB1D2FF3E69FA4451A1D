@@ -1,0 +1,45 @@
+﻿<div class="sidebar-brand">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard">
+            <span class="brand-mark"><i data-lucide="heart-pulse" aria-hidden="true"></i></span>
+            <span>PetCare</span>
+        </a>
+    </div>
+</div>
+
+<div class="nav-scrollable">
+    <AuthorizeView Roles="Director,Recepcionista,Veterinario">
+        <Authorized>
+    <span class="nav-section-label">Administración</span>
+    <nav class="nav flex-column" aria-label="Navegación del panel">
+        <NavLink class="nav-link" href="dashboard"><i data-lucide="layout-dashboard" aria-hidden="true"></i> Dashboard</NavLink>
+        <NavLink class="nav-link" href="usuarios"><i data-lucide="users" aria-hidden="true"></i> Usuarios</NavLink>
+        <NavLink class="nav-link" href="servicios"><i data-lucide="stethoscope" aria-hidden="true"></i> Servicios</NavLink>
+        <NavLink class="nav-link" href="citas"><i data-lucide="stethoscope" aria-hidden="true"></i> Citas</NavLink>
+        <NavLink class="nav-link" href="hospitalizaciones"><i data-lucide="heart-pulse" aria-hidden="true"></i> Hospitalizaciones</NavLink>
+        <NavLink class="nav-link" href="lotes"><i data-lucide="package" aria-hidden="true"></i> Lotes</NavLink>
+        <NavLink class="nav-link" href="facturas"><i data-lucide="receipt-text" aria-hidden="true"></i> Facturas</NavLink>
+        <NavLink class="nav-link" href="perfil"><i data-lucide="settings" aria-hidden="true"></i> Mi cuenta</NavLink>
+    </nav>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Cliente">
+        <Authorized>
+            <span class="nav-section-label">Mi PetCare</span>
+            <nav class="nav flex-column" aria-label="Navegación del cliente">
+                <NavLink class="nav-link" href="dashboard"><i data-lucide="layout-dashboard" aria-hidden="true"></i> Dashboard</NavLink>
+                <NavLink class="nav-link" href="servicios"><i data-lucide="stethoscope" aria-hidden="true"></i> Mis servicios</NavLink>
+                <NavLink class="nav-link" href="citas"><i data-lucide="stethoscope" aria-hidden="true"></i> Mis citas</NavLink>
+                <NavLink class="nav-link" href="hospitalizaciones"><i data-lucide="heart-pulse" aria-hidden="true"></i> Mis hospitalizaciones</NavLink>
+                <NavLink class="nav-link" href="facturas"><i data-lucide="receipt-text" aria-hidden="true"></i> Mis facturas</NavLink>
+                <NavLink class="nav-link" href="perfil"><i data-lucide="settings" aria-hidden="true"></i> Mi cuenta</NavLink>
+            </nav>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+<form class="logout-form" method="post" action="/account/logout">
+    <AntiforgeryToken />
+    <button type="submit"><i data-lucide="log-out" aria-hidden="true"></i> Cerrar sesión</button>
+</form>
+

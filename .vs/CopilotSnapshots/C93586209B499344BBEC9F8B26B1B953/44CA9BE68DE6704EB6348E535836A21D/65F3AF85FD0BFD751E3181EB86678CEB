@@ -1,0 +1,53 @@
+﻿@page "/facturas"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Facturas | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Facturación</span><h1>Facturas</h1><p>Busca, crea, consulta y anula facturas.</p></div></div>
+@if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error toast-message" : "operation-success toast-message")" role="alert">@Message</div>}
+
+@if (CanOperate)
+{
+    <div class="form-card">
+        <div class="form-card-header"><div><span class="page-eyebrow">Nueva factura</span><h2>Crear factura</h2></div></div>
+        <EditForm Model="Draft" OnValidSubmit="CreateAsync" OnInvalidSubmit="ShowInvoiceValidationError">
+            <DataAnnotationsValidator />
+            <div class="form-grid"><div class="field"><label>Número</label><InputText @bind-Value="Draft.Number" maxlength="20" /></div><div class="field"><label>Cliente</label><InputText @bind-Value="Draft.Customer" maxlength="100" /></div></div>
+            <div class="line-editor"><div class="field"><label>Origen</label><InputSelect @bind-Value="NewLine.Kind"><option value="Servicio">Servicio</option><option value="Producto">Medicamento</option></InputSelect></div><div class="field"><label>Elemento</label><InputSelect @bind-Value="NewLine.ItemId"><option value="0">Selecciona</option>@if(NewLine.Kind == "Servicio"){foreach(var item in Services){<option value="@item.Id">@item.Code - @item.PetName</option>}}else{foreach(var item in Products){<option value="@item.Id">@item.Code - @item.Name</option>}}</InputSelect></div><div class="field"><label>Cantidad</label><InputNumber @bind-Value="NewLine.Quantity" /></div><button class="text-action" type="button" @onclick="AddLine">Añadir servicio/medicamento</button></div>
+            <ul class="invoice-lines">@foreach(var line in Lines){<li><span>@line.Description x @line.Quantity</span><strong>@((line.Quantity * line.UnitPrice).ToString("N2"))</strong><button type="button" class="text-action" @onclick="() => RemoveLine(line)">Quitar</button></li>}</ul>
+            <div class="invoice-total">Total: <strong>@(Lines.Sum(x => x.Quantity * x.UnitPrice).ToString("N2"))</strong></div><button class="saas-primary-button" type="submit"><i data-lucide="file-plus-2" aria-hidden="true"></i> Facturar</button>
+        </EditForm>
+    </div>
+}
+
+<div class="search-bar"><label for="invoice-search">Buscar por número o cliente<input id="invoice-search" @bind="Search" @onkeydown="SearchOnEnter" placeholder="Escribe y pulsa Enter" /></label><button class="saas-primary-button" type="button" @onclick="SearchAsync"><i data-lucide="search" aria-hidden="true"></i> Buscar</button></div>
+@if (Rows is null){<div class="loading-state">Cargando facturas...</div>}else{<div class="data-card"><div class="data-card-header"><strong>Facturas emitidas</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>@foreach(var row in Rows){<tr><td class="table-primary">@row.Number</td><td>@row.IssuedAt.ToString("dd/MM/yyyy HH:mm")</td><td>@row.Customer</td><td>@row.Total.ToString("N0")</td><td><span class="@(row.IsCancelled ? "cancelled-badge" : "status-badge")">@(row.IsCancelled ? "Anulada" : "Emitida")</span></td><td><button class="text-action" @onclick="() => ShowDetailAsync(row.Id)">Detalle</button>@if(!row.IsCancelled && IsAdmin){if(ConfirmCancelId == row.Id){<button class="danger-action" @onclick="() => CancelAsync(row.Id)">Confirmar anulación</button>}else{<button class="text-action danger-text" @onclick="() => ConfirmCancelId = row.Id">Anular</button>}}</td></tr>}</tbody></table></div></div>}
+@if (Detail is not null){<div class="detail-card"><div class="data-card-header"><strong>Detalle @Detail.Number</strong><button class="text-action" type="button" @onclick="() => Detail = null">Cerrar</button></div><p>Cliente: @Detail.Customer · Estado: @(Detail.IsCancelled ? "Anulada" : "Emitida")</p><ul class="invoice-lines">@foreach(var line in Detail.Lines){<li><span>@line.Code - @line.Description x @line.Quantity</span><strong>@((line.Quantity * line.UnitPrice).ToString("N2"))</strong></li>}</ul><div class="invoice-total">Total: <strong>@(Detail.Lines.Sum(x => x.Quantity * x.UnitPrice).ToString("N2"))</strong></div></div>}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.InvoiceRow>? Rows;
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow> Services = [];
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow> Products = [];
+    private List<LineModel> Lines = [];
+    private InvoiceDraftModel Draft { get; set; } = new();
+    private NewLineModel NewLine { get; set; } = new();
+    private PetCare_Proyecto_final.Data.PetCareDataService.InvoiceDetail? Detail;
+    private string Search = string.Empty; private string? Message; private bool IsError; private int? ConfirmCancelId;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private bool IsAdmin => ActorRole == "Administrador"; private bool CanOperate => ActorRole is "Administrador" or "Recepcionista";
+    protected override async Task OnInitializedAsync(){Services=await Data.GetServicesAsync();Products=await Data.GetProductsAsync();await SearchAsync();}
+    private async Task SearchAsync()=>Rows=await Data.SearchInvoicesAsync(Search);
+    private async Task SearchOnEnter(KeyboardEventArgs args){if(args.Key=="Enter")await SearchAsync();}
+    private void AddLine(){if(NewLine.ItemId<=0){Message="Selecciona un servicio o medicamento antes de añadirlo.";IsError=true;return;}if(NewLine.Kind=="Servicio"){var item=Services.FirstOrDefault(x=>x.Id==NewLine.ItemId);if(item is null)return;Lines.Add(new(item.Id,null,NewLine.Quantity,item.DailyRate??0,$"{item.Code} - {item.PetName}"));}else{var item=Products.FirstOrDefault(x=>x.Id==NewLine.ItemId);if(item is null)return;Lines.Add(new(null,item.Id,NewLine.Quantity,item.UnitPrice,$"{item.Code} - {item.Name}"));}NewLine=new();Message=null;}
+    private void ShowInvoiceValidationError(){Message="El número y el cliente son obligatorios. Añade al menos un servicio o medicamento.";IsError=true;}
+    private void RemoveLine(LineModel line)=>Lines.Remove(line);
+    private async Task CreateAsync(){try{var issuer=AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;if(!int.TryParse(issuer,out var issuerId))throw new DomainOperationException("No se pudo identificar al usuario emisor.");await Data.CreateInvoiceAsync(ActorRole,Draft.Number,Draft.Customer,issuerId,Lines.Select(x=>new PetCare_Proyecto_final.Data.PetCareDataService.InvoiceLineInput(x.ServiceId,x.ProductId,x.Quantity,x.UnitPrice)).ToList());Message="Factura creada correctamente.";IsError=false;Draft=new();Lines=[];await SearchAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private async Task ShowDetailAsync(int id)=>Detail=await Data.GetInvoiceDetailAsync(id);
+    private async Task CancelAsync(int id){try{await Data.CancelInvoiceAsync(ActorRole,id);Message="Factura anulada correctamente.";IsError=false;ConfirmCancelId=null;await SearchAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private sealed class InvoiceDraftModel{[Required]public string Number{get;set;}=string.Empty;[Required]public string Customer{get;set;}=string.Empty;}
+    private sealed class NewLineModel{public string Kind{get;set;}="Servicio";public int ItemId{get;set;}public int Quantity{get;set;}=1;}
+    private sealed class LineModel(int? serviceId,int? productId,int quantity,decimal unitPrice,string description){public int? ServiceId{get;}=serviceId;public int? ProductId{get;}=productId;public int Quantity{get;}=quantity;public decimal UnitPrice{get;}=unitPrice;public string Description{get;}=description;}
+}

@@ -1,0 +1,372 @@
+﻿using System.Data;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
+
+namespace PetCare_Proyecto_final.Data;
+
+public sealed class PetCareDataService(IConfiguration configuration)
+{
+    private readonly string _connectionString = configuration.GetConnectionString("PetCareWeb")
+        ?? throw new InvalidOperationException("No se encontró la cadena de conexión PetCareWeb.");
+
+    public static string NormalizeRole(string? role) =>
+        string.Equals(role?.Trim(), "Administrador", StringComparison.OrdinalIgnoreCase)
+            ? "Director"
+            : role?.Trim() ?? string.Empty;
+
+    public async Task<AuthenticatedUser?> ValidateCredentialsAsync(string username, string password)
+    {
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, Nombreusuario, NombreCompleto, Rol, ContrasenaHash FROM dbo.Usuarios WHERE Nombreusuario = @username", connection);
+        command.Parameters.Add("@username", SqlDbType.NVarChar, 50).Value = username.Trim();
+        await using var reader = await command.ExecuteReaderAsync();
+        if (!await reader.ReadAsync() || !VerifyPassword(password, reader.GetString(4))) return null;
+        return new AuthenticatedUser(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), NormalizeRole(reader.GetString(3)));
+    }
+
+    public async Task ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+    {
+        if (newPassword.Length < 8) throw new DomainOperationException("La nueva contraseña debe tener al menos 8 caracteres.");
+        await using var connection = await OpenConnectionAsync();
+        await using var read = new SqlCommand("SELECT ContrasenaHash FROM dbo.Usuarios WHERE Id = @id", connection);
+        read.Parameters.Add("@id", SqlDbType.Int).Value = userId;
+        var stored = await read.ExecuteScalarAsync() as string;
+        if (stored is null || !VerifyPassword(currentPassword, stored)) throw new DomainOperationException("La contraseña actual no es correcta.");
+        var salt = RandomNumberGenerator.GetBytes(16);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(newPassword, salt, 100000, HashAlgorithmName.SHA256, 32);
+        var value = $"PBKDF2-SHA256$100000${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+        await using var update = new SqlCommand("UPDATE dbo.Usuarios SET ContrasenaHash = @hash, DebeCambiarContrasena = 0 WHERE Id = @id", connection);
+        update.Parameters.Add("@hash", SqlDbType.NVarChar, 200).Value = value; update.Parameters.Add("@id", SqlDbType.Int).Value = userId;
+        await update.ExecuteNonQueryAsync();
+    }
+
+    public async Task UpdateServiceVeterinarianAsync(string actorRole, int serviceId, int veterinarianId)
+    {
+        EnsureCanOperate(actorRole);
+        if (veterinarianId > 0) await EnsureVeterinarianAsync(veterinarianId);
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("UPDATE dbo.Servicios SET VeterinarioId = NULLIF(@vet, 0), VeterinarioAsignado = (SELECT NombreCompleto FROM dbo.Usuarios WHERE Id = NULLIF(@vet, 0)) WHERE Id = @id", connection);
+        command.Parameters.Add("@vet", SqlDbType.Int).Value = veterinarianId;
+        command.Parameters.Add("@id", SqlDbType.Int).Value = serviceId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("El servicio no existe.");
+    }
+
+    public async Task<DashboardSummary> GetDashboardSummaryAsync(string actorRole, int actorId)
+    {
+        await using var connection = await OpenConnectionAsync();
+        var clientFilter = actorRole == "Cliente" ? " WHERE ClienteId = @actorId" : string.Empty;
+        var invoiceFilter = actorRole == "Cliente" ? " WHERE NombreCliente = (SELECT NombreCompleto FROM dbo.Usuarios WHERE Id = @actorId)" : string.Empty;
+        await using var command = new SqlCommand($"SELECT (SELECT COUNT(*) FROM dbo.Usuarios), (SELECT COUNT(*) FROM dbo.Servicios{clientFilter}), (SELECT COUNT(*) FROM dbo.Productos), (SELECT COUNT(*) FROM dbo.Facturas{invoiceFilter}), (SELECT COUNT(*) FROM dbo.Servicios WHERE Tipo = 'Cita'{(actorRole == "Cliente" ? " AND ClienteId = @actorId" : string.Empty)}), (SELECT COUNT(*) FROM dbo.Servicios WHERE Tipo = 'Hospitalizacion'{(actorRole == "Cliente" ? " AND ClienteId = @actorId" : string.Empty)})", connection);
+        command.Parameters.Add("@actorId", SqlDbType.Int).Value = actorId;
+        await using var reader = await command.ExecuteReaderAsync();
+        await reader.ReadAsync();
+        return new DashboardSummary(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5));
+    }
+
+    public async Task<IReadOnlyList<UserRow>> GetUsersAsync()
+    {
+        var rows = new List<UserRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, Nombreusuario, NombreCompleto, Rol FROM dbo.Usuarios ORDER BY NombreCompleto", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new UserRow(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<PetRow>> GetPetsAsync()
+    {
+        var rows = new List<PetRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT u.NombreCompleto, m.Nombre, m.Edad, m.Sexo, m.Raza FROM dbo.Mascotas m INNER JOIN dbo.Usuarios u ON u.Id = m.ClienteId ORDER BY u.NombreCompleto, m.Nombre", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new PetRow(reader.GetString(0), reader.GetString(1), reader.IsDBNull(2) ? null : reader.GetInt32(2), reader.IsDBNull(3) ? null : reader.GetString(3), reader.IsDBNull(4) ? null : reader.GetString(4)));
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<ClientOption>> GetClientsAsync()
+    {
+        var rows = new List<ClientOption>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, NombreCompleto FROM dbo.Usuarios WHERE Rol = 'Cliente' ORDER BY NombreCompleto", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new ClientOption(reader.GetInt32(0), reader.GetString(1)));
+        return rows;
+    }
+
+    public async Task CreateProductAsync(string actorRole, ProductInput input)
+    {
+        EnsureCanOperate(actorRole);
+        ValidateText(input.Name, "El medicamento", 100);
+        ValidateCode(input.BatchNumber, "El número de lote");
+        if (input.ExpirationDate <= DateTime.Today || input.Quantity <= 0 || input.UnitPrice <= 0) throw new DomainOperationException("El lote debe tener vencimiento futuro, cantidad y precio mayor que cero.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("INSERT INTO dbo.Productos (Codigo, Tipo, Nombre, PrecioUnidad, FechaVencimiento, NumeroLote, CantidadDisponible) VALUES (CONCAT('MED-', RIGHT(CONCAT('000000', NEXT VALUE FOR dbo.SecuenciaProductos), 6)), 'LoteMedicamento', @name, @price, @expiry, @batch, @quantity)", connection);
+        command.Parameters.Add("@name", SqlDbType.NVarChar, 100).Value = input.Name.Trim(); command.Parameters.Add("@price", SqlDbType.Decimal).Value = input.UnitPrice; command.Parameters.Add("@expiry", SqlDbType.Date).Value = input.ExpirationDate.Date; command.Parameters.Add("@batch", SqlDbType.NVarChar, 40).Value = input.BatchNumber.Trim(); command.Parameters.Add("@quantity", SqlDbType.Int).Value = input.Quantity;
+        await ExecuteWithDomainErrorAsync(command, "No se pudo registrar el lote. El código puede estar repetido.");
+    }
+
+    public async Task DeleteProductAsync(string actorRole, int productId)
+    {
+        if (actorRole is not ("Director" or "Recepcionista")) throw new DomainOperationException("Solo el Director o la recepción pueden eliminar medicamentos.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("IF EXISTS (SELECT 1 FROM dbo.LineasFactura WHERE ProductoId = @id) THROW 51000, 'El medicamento ya está incluido en una factura y no se puede eliminar.'; DELETE FROM dbo.Productos WHERE Id = @id;", connection);
+        command.Parameters.Add("@id", SqlDbType.Int).Value = productId;
+        try
+        {
+            if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("El medicamento no existe.");
+        }
+        catch (SqlException ex) when (ex.Number == 51000)
+        {
+            throw new DomainOperationException(ex.Message);
+        }
+        catch (SqlException)
+        {
+            throw new DomainOperationException("No se pudo eliminar el medicamento porque está siendo utilizado.");
+        }
+    }
+
+    public async Task CreateUserAsync(string actorRole, string username, string fullName, string password)
+    {
+        EnsureAdmin(actorRole);
+        if (!Regex.IsMatch(username ?? string.Empty, "^[A-Za-z0-9_]{3,50}$") || !IsSafeText(fullName, 100) || password.Length < 8)
+            throw new DomainOperationException("El usuario, nombre completo y una contraseña de al menos 8 caracteres son obligatorios.");
+
+        var salt = RandomNumberGenerator.GetBytes(16);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
+        var stored = $"PBKDF2-SHA256$100000${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("INSERT INTO dbo.Usuarios (Nombreusuario, NombreCompleto, ContrasenaHash, Rol) VALUES (@username, @fullName, @hash, 'Cliente')", connection);
+        command.Parameters.Add("@username", SqlDbType.NVarChar, 50).Value = username.Trim();
+        command.Parameters.Add("@fullName", SqlDbType.NVarChar, 100).Value = fullName.Trim();
+        command.Parameters.Add("@hash", SqlDbType.NVarChar, 200).Value = stored;
+        await ExecuteWithDomainErrorAsync(command, "No se pudo crear el usuario. El nombre de usuario puede estar repetido.");
+    }
+
+    public async Task<IReadOnlyList<VetOption>> GetVeterinariansAsync()
+    {
+        var rows = new List<VetOption>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, NombreCompleto FROM dbo.Usuarios WHERE Rol = 'Veterinario' ORDER BY NombreCompleto", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new VetOption(reader.GetInt32(0), reader.GetString(1)));
+        return rows;
+    }
+
+    public async Task SetUserRoleAsync(string actorRole, int userId, string role)
+    {
+        EnsureAdmin(actorRole);
+        if (!new[] { "Cliente", "Recepcionista", "Veterinario", "Director" }.Contains(role)) throw new DomainOperationException("El rol seleccionado no es válido.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("UPDATE dbo.Usuarios SET Rol = @role WHERE Id = @id", connection);
+        command.Parameters.Add("@role", SqlDbType.NVarChar, 20).Value = role;
+        command.Parameters.Add("@id", SqlDbType.Int).Value = userId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("El usuario no existe.");
+    }
+
+    public async Task<IReadOnlyList<CageRow>> GetCagesAsync()
+    {
+        var rows = new List<CageRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, Tamano, TarifaDiaria, Activa FROM dbo.Jaulas ORDER BY Id", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new CageRow(reader.GetInt32(0), reader.GetString(1), reader.GetDecimal(2), reader.GetBoolean(3)));
+        return rows;
+    }
+
+    public async Task UpdateCageRateAsync(string actorRole, int cageId, decimal rate)
+    {
+        EnsureAdmin(actorRole);
+        if (rate <= 0) throw new DomainOperationException("La tarifa de la jaula debe ser mayor que cero.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("UPDATE dbo.Jaulas SET TarifaDiaria = @rate WHERE Id = @id", connection);
+        command.Parameters.Add("@rate", SqlDbType.Decimal).Value = rate;
+        command.Parameters.Add("@id", SqlDbType.Int).Value = cageId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("La jaula no existe.");
+    }
+
+    public async Task CreateAppointmentAsync(string actorRole, AppointmentInput input)
+    {
+        EnsureCanOperate(actorRole);
+        ValidateCode(input.Code, "El código");
+        ValidateText(input.PetName, "El nombre de la mascota", 80);
+        if (input.DurationMinutes < 45 || input.DurationMinutes > 180) throw new DomainOperationException("La duración de una cita debe estar entre 45 y 180 minutos.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("INSERT INTO dbo.Servicios (Codigo, Tipo, NombreMascota, Fecha, DuracionMinutos, VeterinarioAsignado, VeterinarioId, ClienteId) VALUES (CONCAT('SER-', RIGHT(CONCAT('000000', NEXT VALUE FOR dbo.SecuenciaServicios), 6)), 'Cita', @pet, @date, @duration, (SELECT NombreCompleto FROM dbo.Usuarios WHERE Id = NULLIF(@vet, 0)), NULLIF(@vet, 0), NULLIF(@client, 0))", connection);
+        AddAppointmentParameters(command, input);
+        await ExecuteWithDomainErrorAsync(command, "No se pudo registrar la cita. Verifica que el código no esté repetido.");
+    }
+
+    public async Task CreateHospitalizationAsync(string actorRole, HospitalizationInput input)
+    {
+        EnsureCanOperate(actorRole);
+        ValidateCode(input.Code, "El código");
+        ValidateText(input.PetName, "El nombre de la mascota", 80);
+        if (input.AdmissionDate == default) throw new DomainOperationException("La fecha de ingreso es obligatoria.");
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("INSERT INTO dbo.Servicios (Codigo, Tipo, NombreMascota, Fecha, VeterinarioAsignado, VeterinarioId, TarifaDiaria, JaulaId, TamanoJaula, ClienteId) SELECT @code, 'Hospitalizacion', @pet, @date, u.NombreCompleto, NULLIF(@vet, 0), j.TarifaDiaria, j.Id, j.Tamano, NULLIF(@client, 0) FROM dbo.Jaulas j LEFT JOIN dbo.Usuarios u ON u.Id = NULLIF(@vet, 0) WHERE j.Id = @cage AND j.Activa = 1", connection);
+        command.Parameters.Add("@pet", SqlDbType.NVarChar, 80).Value = input.PetName.Trim();
+        command.Parameters.Add("@code", SqlDbType.NVarChar, 20).Value = input.Code.Trim();
+        command.Parameters.Add("@date", SqlDbType.DateTime2).Value = input.AdmissionDate;
+        command.Parameters.Add("@vet", SqlDbType.Int).Value = input.VeterinarianId;
+        command.Parameters.Add("@cage", SqlDbType.Int).Value = input.CageId;
+        command.Parameters.Add("@client", SqlDbType.Int).Value = input.ClientId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("La jaula no está disponible o el veterinario no existe.");
+    }
+
+    public async Task DischargeHospitalizationAsync(string actorRole, int serviceId, DateTime dischargeDate)
+    {
+        EnsureCanOperate(actorRole);
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("UPDATE dbo.Servicios SET FechaAlta = @discharge WHERE Id = @id AND Tipo = 'Hospitalizacion' AND FechaAlta IS NULL AND @discharge >= Fecha", connection);
+        command.Parameters.Add("@discharge", SqlDbType.DateTime2).Value = dischargeDate;
+        command.Parameters.Add("@id", SqlDbType.Int).Value = serviceId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("No se pudo dar de alta: comprueba la fecha y que el ingreso siga activo.");
+    }
+
+    public async Task<IReadOnlyList<ServiceRow>> GetServicesAsync(string actorRole, int actorId)
+    {
+        var rows = new List<ServiceRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT s.Id, s.Codigo, s.Tipo, s.NombreMascota, s.Fecha, s.VeterinarioAsignado, s.VeterinarioId, s.DuracionMinutos, s.TarifaDiaria, s.FechaAlta, s.TamanoJaula, s.JaulaId FROM dbo.Servicios s WHERE (@role <> 'Cliente' OR s.ClienteId = @actorId) ORDER BY s.Fecha DESC", connection);
+        command.Parameters.Add("@role", SqlDbType.NVarChar, 20).Value = actorRole; command.Parameters.Add("@actorId", SqlDbType.Int).Value = actorId;
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new ServiceRow(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetDateTime(4), reader.IsDBNull(5) ? null : reader.GetString(5), reader.IsDBNull(6) ? null : reader.GetInt32(6), reader.IsDBNull(7) ? null : reader.GetInt32(7), reader.IsDBNull(8) ? null : reader.GetDecimal(8), reader.IsDBNull(9) ? null : reader.GetDateTime(9), reader.IsDBNull(10) ? null : reader.GetString(10), reader.IsDBNull(11) ? null : reader.GetInt32(11)));
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<ProductRow>> GetProductsAsync()
+    {
+        var rows = new List<ProductRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT Id, Codigo, Nombre, PrecioUnidad, FechaVencimiento, NumeroLote, CantidadDisponible FROM dbo.Productos WHERE CantidadDisponible > 0 ORDER BY FechaVencimiento, Nombre", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) { DateTime? expiry = reader.IsDBNull(4) ? null : reader.GetDateTime(4); rows.Add(new ProductRow(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetDecimal(3), expiry, reader.IsDBNull(5) ? null : reader.GetString(5), reader.GetInt32(6), expiry < DateTime.Today)); }
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<InvoiceRow>> SearchInvoicesAsync(string? search, string actorRole, int actorId)
+    {
+        var rows = new List<InvoiceRow>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT f.Id, f.Numero, f.FechaEmision, f.NombreCliente, f.EstaAnulada, u.Nombreusuario, COALESCE(SUM(l.Cantidad * l.PrecioUnitario), 0) FROM dbo.Facturas f INNER JOIN dbo.Usuarios u ON u.Id = f.UsuarioEmisorId LEFT JOIN dbo.LineasFactura l ON l.FacturaId = f.Id WHERE (@role <> 'Cliente' OR f.NombreCliente = (SELECT NombreCompleto FROM dbo.Usuarios WHERE Id = @actorId)) AND (@search = '' OR f.Numero LIKE @like OR f.NombreCliente LIKE @like) GROUP BY f.Id, f.Numero, f.FechaEmision, f.NombreCliente, f.EstaAnulada, u.Nombreusuario ORDER BY f.FechaEmision DESC", connection);
+        var value = (search ?? string.Empty).Trim(); command.Parameters.Add("@search", SqlDbType.NVarChar, 100).Value = value; command.Parameters.Add("@like", SqlDbType.NVarChar, 102).Value = $"%{value}%"; command.Parameters.Add("@role", SqlDbType.NVarChar, 20).Value = actorRole; command.Parameters.Add("@actorId", SqlDbType.Int).Value = actorId;
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new InvoiceRow(reader.GetInt32(0), reader.GetString(1), reader.GetDateTime(2), reader.GetString(3), reader.GetBoolean(4), reader.GetString(5), reader.GetDecimal(6)));
+        return rows;
+    }
+
+    public async Task CancelInvoiceAsync(string actorRole, int invoiceId)
+    {
+        EnsureAdmin(actorRole);
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("UPDATE dbo.Facturas SET EstaAnulada = 1 WHERE Id = @id AND EstaAnulada = 0", connection);
+        command.Parameters.Add("@id", SqlDbType.Int).Value = invoiceId;
+        if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException("La factura no existe o ya está anulada.");
+    }
+
+    public async Task CreateInvoiceAsync(string actorRole, string customer, int issuerId, IReadOnlyList<InvoiceLineInput> lines)
+    {
+        EnsureCanOperate(actorRole);
+        ValidateText(customer, "El cliente", 100);
+        if (lines.Count == 0) throw new DomainOperationException("La factura necesita número, cliente y al menos un servicio o medicamento.");
+        await using var connection = await OpenConnectionAsync();
+        await using var transaction = (SqlTransaction)await connection.BeginTransactionAsync();
+        try
+        {
+            await using var invoice = new SqlCommand("INSERT INTO dbo.Facturas (Numero, FechaEmision, NombreCliente, UsuarioEmisorId) OUTPUT INSERTED.Id VALUES (CONCAT('FAC-', RIGHT(CONCAT('000000', NEXT VALUE FOR dbo.SecuenciaFacturas), 6)), SYSDATETIME(), @customer, @issuer)", connection, transaction);
+            invoice.Parameters.Add("@customer", SqlDbType.NVarChar, 100).Value = customer.Trim(); invoice.Parameters.Add("@issuer", SqlDbType.Int).Value = issuerId;
+            var invoiceId = (int)(await invoice.ExecuteScalarAsync() ?? throw new DomainOperationException("No se pudo crear la factura."));
+            foreach (var line in lines)
+            {
+                if ((line.ServiceId is null) == (line.ProductId is null) || line.Quantity <= 0 || line.UnitPrice < 0) throw new DomainOperationException("Cada renglón debe referenciar un único servicio o producto y tener valores válidos.");
+                await using var lineCommand = new SqlCommand("IF @product IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.Productos WHERE Id = @product AND FechaVencimiento >= CAST(GETDATE() AS DATE) AND CantidadDisponible >= @quantity) THROW 51001, 'El medicamento no está disponible o no tiene suficiente cantidad.'; IF @product IS NOT NULL UPDATE dbo.Productos SET CantidadDisponible = CantidadDisponible - @quantity WHERE Id = @product; INSERT INTO dbo.LineasFactura (FacturaId, ServicioId, ProductoId, Cantidad, PrecioUnitario) VALUES (@invoice, @service, @product, @quantity, @price)", connection, transaction);
+                lineCommand.Parameters.Add("@invoice", SqlDbType.Int).Value = invoiceId; lineCommand.Parameters.Add("@service", SqlDbType.Int).Value = (object?)line.ServiceId ?? DBNull.Value; lineCommand.Parameters.Add("@product", SqlDbType.Int).Value = (object?)line.ProductId ?? DBNull.Value; lineCommand.Parameters.Add("@quantity", SqlDbType.Int).Value = line.Quantity; lineCommand.Parameters.Add("@price", SqlDbType.Decimal).Value = line.UnitPrice;
+                await lineCommand.ExecuteNonQueryAsync();
+            }
+            await transaction.CommitAsync();
+        }
+        catch (DomainOperationException) { await transaction.RollbackAsync(); throw; }
+        catch (SqlException) { await transaction.RollbackAsync(); throw new DomainOperationException("No se pudo crear la factura. Comprueba el número y los renglones."); }
+    }
+
+    public async Task<InvoiceDetail?> GetInvoiceDetailAsync(int invoiceId)
+    {
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT f.Numero, f.FechaEmision, f.NombreCliente, f.EstaAnulada, l.Id, COALESCE(s.Codigo, p.Codigo), CASE WHEN l.ServicioId IS NULL THEN CONCAT(p.Nombre, ' - Lote ', p.NumeroLote) WHEN s.Tipo = 'Cita' THEN CONCAT('Consulta - ', s.NombreMascota, ' - ', FORMAT(s.Fecha, 'dd/MM/yyyy HH:mm'), ' - ', COALESCE(s.VeterinarioAsignado, 'Sin veterinario')) ELSE CONCAT('Hospitalización - ', s.NombreMascota, ' - ', DATEDIFF(DAY, s.Fecha, COALESCE(s.FechaAlta, SYSDATETIME())), ' días') END, l.Cantidad, l.PrecioUnitario FROM dbo.Facturas f LEFT JOIN dbo.LineasFactura l ON l.FacturaId = f.Id LEFT JOIN dbo.Servicios s ON s.Id = l.ServicioId LEFT JOIN dbo.Productos p ON p.Id = l.ProductoId WHERE f.Id = @id ORDER BY l.Id", connection); command.Parameters.Add("@id", SqlDbType.Int).Value = invoiceId;
+        await using var reader = await command.ExecuteReaderAsync();
+        InvoiceDetail? detail = null;
+        while (await reader.ReadAsync())
+        {
+            detail ??= new InvoiceDetail(reader.GetString(0), reader.GetDateTime(1), reader.GetString(2), reader.GetBoolean(3), []);
+            if (!reader.IsDBNull(4)) detail.Lines.Add(new InvoiceLineRow(reader.GetString(5), reader.GetString(6), reader.GetInt32(7), reader.GetDecimal(8)));
+        }
+        return detail;
+    }
+
+    public async Task<IReadOnlyList<UnifiedItem>> GetUnifiedItemsAsync()
+    {
+        var rows = new List<UnifiedItem>();
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT N'Servicio' AS Origen, Codigo, CONCAT(Tipo, N' - ', NombreMascota), Fecha, COALESCE(TarifaDiaria, 0) FROM dbo.Servicios UNION ALL SELECT N'Producto', Codigo, Nombre, CAST(FechaVencimiento AS DATETIME2), PrecioUnidad FROM dbo.Productos ORDER BY Fecha DESC", connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) rows.Add(new UnifiedItem(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetDateTime(3), reader.GetDecimal(4)));
+        return rows;
+    }
+
+    private async Task EnsureVeterinarianAsync(int id)
+    {
+        await using var connection = await OpenConnectionAsync();
+        await using var command = new SqlCommand("SELECT COUNT(*) FROM dbo.Usuarios WHERE Id = @id AND Rol = 'Veterinario'", connection); command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+        if ((int)await command.ExecuteScalarAsync()! == 0) throw new DomainOperationException("El usuario seleccionado no tiene el rol Veterinario.");
+    }
+
+    private static void EnsureAdmin(string role) { if (role != "Director") throw new DomainOperationException("Solo un Director puede realizar esta operación."); }
+    private static void EnsureCanOperate(string role) { if (role is not ("Director" or "Recepcionista" or "Veterinario")) throw new DomainOperationException("Tu rol no permite registrar esta operación."); }
+    private static void ValidateCode(string? value, string field)
+    {
+        if (!Regex.IsMatch(value ?? string.Empty, "^[A-Za-z0-9-]{1,40}$")) throw new DomainOperationException($"{field} solo puede contener letras, números y guiones.");
+    }
+    private static void ValidateText(string? value, string field, int maxLength)
+    {
+        if (!IsSafeText(value, maxLength)) throw new DomainOperationException($"{field} contiene caracteres no permitidos o supera la longitud máxima.");
+    }
+    private static bool IsSafeText(string? value, int maxLength)
+    {
+        return !string.IsNullOrWhiteSpace(value)
+            && value.Length <= maxLength
+            && !value.Contains('<')
+            && !value.Contains('>')
+            && !value.Any(char.IsControl)
+            && Regex.IsMatch(value, @"^[\p{L}\p{M}\p{N}\s.,'()\-/]+$");
+    }
+    private static void AddAppointmentParameters(SqlCommand command, AppointmentInput input) { command.Parameters.Add("@code", SqlDbType.NVarChar, 20).Value = input.Code.Trim(); command.Parameters.Add("@pet", SqlDbType.NVarChar, 80).Value = input.PetName.Trim(); command.Parameters.Add("@date", SqlDbType.DateTime2).Value = input.Date; command.Parameters.Add("@duration", SqlDbType.Int).Value = input.DurationMinutes; command.Parameters.Add("@vet", SqlDbType.Int).Value = input.VeterinarianId; command.Parameters.Add("@client", SqlDbType.Int).Value = input.ClientId; }
+    private static async Task ExecuteWithDomainErrorAsync(SqlCommand command, string message) { try { if (await command.ExecuteNonQueryAsync() == 0) throw new DomainOperationException(message); } catch (SqlException) { throw new DomainOperationException(message); } }
+    private async Task<SqlConnection> OpenConnectionAsync() { var connection = new SqlConnection(_connectionString); await connection.OpenAsync(); return connection; }
+
+    private static bool VerifyPassword(string password, string storedValue)
+    {
+        var parts = storedValue.Split('$'); if (parts.Length != 4 || parts[0] != "PBKDF2-SHA256" || !int.TryParse(parts[1], out var iterations) || iterations < 1000 || iterations > 1_000_000) return false;
+        try { var salt = Convert.FromBase64String(parts[2]); var expected = Convert.FromBase64String(parts[3]); var actual = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expected.Length); return CryptographicOperations.FixedTimeEquals(actual, expected); } catch (FormatException) { return false; }
+    }
+
+    public sealed record AuthenticatedUser(int Id, string Username, string FullName, string Role);
+    public sealed record DashboardSummary(int Users, int Services, int Products, int Invoices, int Appointments, int Hospitalizations);
+    public sealed record UserRow(int Id, string Username, string FullName, string Role);
+    public sealed record VetOption(int Id, string Name);
+    public sealed record ClientOption(int Id, string Name);
+    public sealed record PetRow(string ClientName, string Name, int? Age, string? Sex, string? Breed);
+    public sealed record CageRow(int Id, string Size, decimal DailyRate, bool Active);
+    public sealed record ServiceRow(int Id, string Code, string Type, string PetName, DateTime Date, string? Veterinarian, int? VeterinarianId, int? DurationMinutes, decimal? DailyRate, DateTime? DischargeDate, string? CageSize, int? CageId);
+    public sealed record ProductRow(int Id, string Code, string Name, decimal UnitPrice, DateTime? ExpirationDate, string? BatchNumber, int Quantity, bool IsExpired);
+    public sealed record InvoiceRow(int Id, string Number, DateTime IssuedAt, string Customer, bool IsCancelled, string IssuedBy, decimal Total);
+    public sealed record InvoiceLineInput(int? ServiceId, int? ProductId, int Quantity, decimal UnitPrice);
+    public sealed record InvoiceLineRow(string Code, string Description, int Quantity, decimal UnitPrice);
+    public sealed record InvoiceDetail(string Number, DateTime IssuedAt, string Customer, bool IsCancelled, List<InvoiceLineRow> Lines);
+    public sealed record UnifiedItem(string Origin, string Code, string Description, DateTime Date, decimal Amount);
+    public sealed record AppointmentInput(string Code, string PetName, DateTime Date, int DurationMinutes, int VeterinarianId, int ClientId);
+    public sealed record HospitalizationInput(string Code, string PetName, DateTime AdmissionDate, int VeterinarianId, int CageId, int ClientId);
+    public sealed record ProductInput(string Code, string Name, decimal UnitPrice, DateTime ExpirationDate, string BatchNumber, int Quantity);
+}
+
+public sealed class DomainOperationException(string message) : Exception(message);

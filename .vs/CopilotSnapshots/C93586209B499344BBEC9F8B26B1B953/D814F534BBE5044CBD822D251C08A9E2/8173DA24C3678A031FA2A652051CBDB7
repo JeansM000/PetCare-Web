@@ -1,0 +1,42 @@
+﻿@page "/"
+@layout PublicLayout
+
+<PageTitle>PetCare | Cuidado inteligente para tus mascotas</PageTitle>
+
+<section class="landing-hero">
+	<div class="hero-copy">
+		<span class="eyebrow">Cuidado que conecta</span>
+		<h1>Todo lo que tu mascota necesita, en un solo lugar.</h1>
+		<p>Organiza su salud, sus rutinas y sus momentos especiales con una experiencia sencilla pensada para quienes más quieren a sus mascotas.</p>
+		<div class="hero-actions">
+			<a class="primary-action" href="login">Comenzar ahora</a>
+			<a class="secondary-action" href="recursos">Conoce PetCare <span aria-hidden="true">→</span></a>
+		</div>
+	</div>
+	<div class="hero-card" aria-label="Resumen de cuidados de PetCare">
+		<div class="card-heading">
+			<span>Resumen de cuidados</span>
+			<span class="status-dot">●</span>
+		</div>
+		<div class="pet-profile">
+			<div class="pet-avatar">🐶</div>
+			<div>
+				<strong>Luna</strong>
+				<small>Próximo cuidado: mañana</small>
+			</div>
+		</div>
+		<div class="care-list">
+			<div><span class="care-icon">✓</span><span>Vacuna anual</span><strong>Listo</strong></div>
+			<div><span class="care-icon">⌁</span><span>Paseo de la tarde</span><strong>18:30</strong></div>
+			<div><span class="care-icon">+</span><span>Consulta veterinaria</span><strong>12 Jun</strong></div>
+		</div>
+	</div>
+</section>
+
+<section class="landing-benefits" aria-label="Beneficios de PetCare">
+	<div><strong>01</strong><span>Cuida mejor</span><small>Información organizada y siempre disponible.</small></div>
+	<div><strong>02</strong><span>Vive tranquilo</span><small>Recordatorios para no olvidar nada importante.</small></div>
+	<div><strong>03</strong><span>Disfruta más</span><small>Más tiempo para crear momentos juntos.</small></div>
+</section>
+
+Welcome to your new app.

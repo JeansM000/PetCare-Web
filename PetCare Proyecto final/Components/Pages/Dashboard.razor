@@ -1,0 +1,42 @@
+@page "/dashboard"
+@attribute [Authorize]
+@using System.Security.Claims
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Dashboard | PetCare</PageTitle>
+
+<div class="saas-page-heading">
+	<div><span class="page-eyebrow">@(IsClient ? "Tu información" : "Resumen general")</span><h1>Dashboard</h1><p>@(IsClient ? "Aquí puedes ver tus servicios, citas y facturas asignadas." : "Una vista rápida de la actividad de PetCare.")</p></div>
+	<span class="date-badge"><i data-lucide="calendar-days" aria-hidden="true"></i> @DateTime.Now.ToString("dd MMM yyyy")</span>
+</div>
+
+@if (Summary is null)
+{
+	<div class="loading-state">Cargando resumen...</div>
+}
+else
+{
+	<div class="metric-grid">
+		@if (!IsClient){<div class="metric-card"><span class="metric-icon"><i data-lucide="users" aria-hidden="true"></i></span><small>Usuarios</small><strong>@Summary.Users</strong><span class="metric-detail">Usuarios registrados</span></div>}
+		<div class="metric-card"><span class="metric-icon"><i data-lucide="stethoscope" aria-hidden="true"></i></span><small>@(IsClient ? "Mis servicios" : "Servicios")</small><strong>@Summary.Services</strong><span class="metric-detail">@Summary.Appointments citas · @Summary.Hospitalizations hospitalizaciones</span></div>
+		@if (!IsClient){<div class="metric-card"><span class="metric-icon"><i data-lucide="package" aria-hidden="true"></i></span><small>Productos</small><strong>@Summary.Products</strong><span class="metric-detail">Productos en catálogo</span></div>}
+		<div class="metric-card"><span class="metric-icon"><i data-lucide="receipt-text" aria-hidden="true"></i></span><small>@(IsClient ? "Mis facturas" : "Facturas")</small><strong>@Summary.Invoices</strong><span class="metric-detail">@(IsClient ? "Facturas asignadas" : "Facturas emitidas")</span></div>
+	</div>
+
+	<section class="dashboard-welcome">
+		<div><span class="page-eyebrow">PetCare en un vistazo</span><h2>@(IsClient ? "Tus servicios y facturas en un solo lugar." : "Gestiona cada detalle desde un solo lugar.")</h2><p>@(IsClient ? "Consulta la información que el equipo de PetCare te ha asignado." : "Utiliza el menú lateral para consultar usuarios, servicios, productos y facturación.")</p></div>
+		<i data-lucide="sparkles" aria-hidden="true"></i>
+	</section>
+}
+
+@code {
+	private PetCare_Proyecto_final.Data.PetCareDataService.DashboardSummary? Summary;
+	private bool IsClient => AuthenticationState?.Result.User.IsInRole("Cliente") == true;
+	[CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		var actorId = int.TryParse(AuthenticationState?.Result.User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : 0;
+		Summary = await Data.GetDashboardSummaryAsync(AuthenticationState?.Result.User.FindFirstValue(ClaimTypes.Role) ?? string.Empty, actorId);
+	}
+}

@@ -1,0 +1,91 @@
+﻿USE PetCareWeb;
+GO
+
+IF EXISTS (SELECT 1 FROM sys.check_constraints WHERE name = N'CHK_Rol' AND parent_object_id = OBJECT_ID(N'dbo.Usuarios'))
+	ALTER TABLE dbo.Usuarios DROP CONSTRAINT CHK_Rol;
+GO
+
+ALTER TABLE dbo.Usuarios ADD CONSTRAINT CHK_Rol CHECK (Rol IN ('Cliente', 'Recepcionista', 'Veterinario', 'Administrador'));
+GO
+
+IF EXISTS (SELECT 1 FROM sys.check_constraints WHERE name = N'CHK_Cita_Duracion' AND parent_object_id = OBJECT_ID(N'dbo.Servicios'))
+	ALTER TABLE dbo.Servicios DROP CONSTRAINT CHK_Cita_Duracion;
+GO
+
+ALTER TABLE dbo.Servicios ADD CONSTRAINT CHK_Cita_Duracion CHECK (Tipo <> 'Cita' OR (DuracionMinutos BETWEEN 45 AND 180));
+GO
+
+IF COL_LENGTH(N'dbo.Servicios', N'VeterinarioId') IS NULL
+	ALTER TABLE dbo.Servicios ADD VeterinarioId INT NULL;
+GO
+
+IF COL_LENGTH(N'dbo.Servicios', N'TamanoJaula') IS NULL
+	ALTER TABLE dbo.Servicios ADD TamanoJaula NVARCHAR(20) NULL;
+GO
+
+IF COL_LENGTH(N'dbo.Servicios', N'JaulaId') IS NULL
+	ALTER TABLE dbo.Servicios ADD JaulaId INT NULL;
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_Servicios_Veterinarios')
+	ALTER TABLE dbo.Servicios ADD CONSTRAINT FK_Servicios_Veterinarios FOREIGN KEY (VeterinarioId) REFERENCES dbo.Usuarios(Id) ON DELETE NO ACTION;
+GO
+
+IF COL_LENGTH(N'dbo.Productos', N'NumeroLote') IS NULL
+	ALTER TABLE dbo.Productos ADD NumeroLote NVARCHAR(40) NULL;
+GO
+
+IF COL_LENGTH(N'dbo.Productos', N'CantidadDisponible') IS NULL
+	ALTER TABLE dbo.Productos ADD CantidadDisponible INT NOT NULL CONSTRAINT DF_Productos_Cantidad DEFAULT 0;
+GO
+
+IF OBJECT_ID(N'dbo.Jaulas', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Jaulas (
+		Id INT IDENTITY(1,1) PRIMARY KEY,
+		Tamano NVARCHAR(20) NOT NULL UNIQUE,
+		TarifaDiaria DECIMAL(18,2) NOT NULL,
+		Activa BIT NOT NULL CONSTRAINT DF_Jaulas_Activa DEFAULT 1,
+		CONSTRAINT CHK_Jaulas_Tamano CHECK (Tamano IN ('Pequena', 'Mediana', 'Grande')),
+		CONSTRAINT CHK_Jaulas_Tarifa CHECK (TarifaDiaria > 0)
+	);
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_Servicios_Jaulas')
+	ALTER TABLE dbo.Servicios ADD CONSTRAINT FK_Servicios_Jaulas FOREIGN KEY (JaulaId) REFERENCES dbo.Jaulas(Id) ON DELETE NO ACTION;
+GO
+
+IF NOT EXISTS (SELECT 1 FROM dbo.Jaulas WHERE Tamano = N'Pequena')
+	INSERT INTO dbo.Jaulas (Tamano, TarifaDiaria) VALUES (N'Pequena', 15000);
+IF NOT EXISTS (SELECT 1 FROM dbo.Jaulas WHERE Tamano = N'Mediana')
+	INSERT INTO dbo.Jaulas (Tamano, TarifaDiaria) VALUES (N'Mediana', 40000);
+IF NOT EXISTS (SELECT 1 FROM dbo.Jaulas WHERE Tamano = N'Grande')
+	INSERT INTO dbo.Jaulas (Tamano, TarifaDiaria) VALUES (N'Grande', 80000);
+GO
+
+DECLARE @i INT = 1;
+WHILE @i <= 30
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM dbo.Productos WHERE Codigo = CONCAT(N'MED-', RIGHT(CONCAT(N'00', @i), 2)))
+	BEGIN
+		INSERT INTO dbo.Productos (Codigo, Tipo, Nombre, PrecioUnidad, FechaVencimiento, NumeroLote, CantidadDisponible)
+		VALUES (
+			CONCAT(N'MED-', RIGHT(CONCAT(N'00', @i), 2)),
+			N'LoteMedicamento',
+			CONCAT(N'Medicamento de ejemplo ', RIGHT(CONCAT(N'00', @i), 2)),
+			5000 + (@i * 750),
+			DATEADD(DAY, CASE WHEN @i <= 10 THEN -@i ELSE 30 + @i END, CAST(GETDATE() AS DATE)),
+			CONCAT(N'LOTE-', RIGHT(CONCAT(N'00', @i), 2)),
+			10 + @i
+		);
+	END;
+	SET @i += 1;
+END;
+GO
+
+SELECT N'Migración PetCareWeb completada' AS Resultado;
+SELECT Rol, COUNT(*) AS Total FROM dbo.Usuarios GROUP BY Rol;
+SELECT COUNT(*) AS Jaulas FROM dbo.Jaulas;
+SELECT COUNT(*) AS LotesMedicamentos FROM dbo.Productos WHERE Tipo = N'LoteMedicamento';
+GO

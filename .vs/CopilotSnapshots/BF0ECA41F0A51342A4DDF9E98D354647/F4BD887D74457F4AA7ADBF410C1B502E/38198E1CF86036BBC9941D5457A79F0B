@@ -1,0 +1,62 @@
+﻿@page "/servicios"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Servicios | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Operaciones</span><h1>Servicios</h1><p>Registra citas desde 45 minutos e ingresos hospitalarios.</p></div></div>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>
+}
+
+@if (CanOperate)
+{
+    <button class="saas-primary-button modal-trigger" type="button" @onclick="() => IsCreateOpen = true"><i data-lucide="stethoscope" aria-hidden="true"></i> Nuevo servicio</button>
+    @if (IsCreateOpen)
+    {
+        <div class="modal-backdrop" role="presentation" @onclick="CloseCreate"><div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="new-service-title" @onclick:stopPropagation="true"><div class="modal-header"><div><span class="page-eyebrow">Nuevo registro</span><h2 id="new-service-title">Registrar servicio</h2></div><button class="modal-close" type="button" aria-label="Cerrar" @onclick="CloseCreate">×</button></div><ServiceForm Veterinarians="Veterinarians" Clients="Clients" Cages="Cages" OnSubmit="RegisterServiceAsync" /></div></div>
+    }
+}
+
+@if (IsAdmin && Cages.Count > 0)
+{
+    <div class="data-card cage-rates-card"><div class="data-card-header"><strong>Tarifas de jaula</strong><span>Solo administrador</span></div><div class="cage-rate-grid">@foreach (var cage in Cages){<div class="cage-rate"><label>@cage.Size</label><input type="number" value="@cageRates[cage.Id]" @onchange="e => UpdateRateInput(cage.Id, e.Value)" /><button class="text-action" @onclick="() => SaveRateAsync(cage.Id)">Guardar tarifa</button></div>}</div></div>
+}
+
+@if (Rows is null)
+{
+    <div class="loading-state">Cargando servicios...</div>
+}
+else
+{
+    <div class="data-card"><div class="data-card-header"><strong>Servicios registrados</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Código</th><th>Tipo</th><th>Mascota</th><th>Fecha</th><th>Veterinario</th><th>Detalle</th><th>Acción</th></tr></thead><tbody>@foreach (var row in Rows){<tr><td class="table-primary">@row.Code</td><td><span class="type-badge">@row.Type</span></td><td>@row.PetName</td><td>@row.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@(row.Veterinarian ?? "Sin asignar")</td><td>@(row.Type == "Cita" ? $"{row.DurationMinutes} min" : $"{row.DailyRate:N0}/día · {row.CageSize}")</td><td>@if (row.Type == "Hospitalizacion" && row.DischargeDate is null){<button class="text-action" @onclick="() => DischargeAsync(row.Id)">Dar de alta</button>}else if(row.Type == "Hospitalizacion"){<span class="status-badge">Alta: @row.DischargeDate.Value.ToString("dd/MM/yyyy")</span>}</td></tr>}</tbody></table></div></div>
+}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow>? Rows;
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.VetOption> Veterinarians = [];
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ClientOption> Clients = [];
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.CageRow> Cages = [];
+    private Dictionary<int, decimal> cageRates = [];
+    private Dictionary<int, int> serviceVets = [];
+    private string? Message;
+    private bool IsError;
+    private bool IsCreateOpen;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private bool IsAdmin => ActorRole == "Administrador";
+    private bool CanOperate => ActorRole is "Administrador" or "Recepcionista" or "Veterinario";
+    private int ActorId => int.TryParse(AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+
+    protected override async Task OnInitializedAsync() => await ReloadAsync();
+    private async Task ReloadAsync(){ Rows = await Data.GetServicesAsync(ActorRole, ActorId); Veterinarians = await Data.GetVeterinariansAsync(); Clients = await Data.GetClientsAsync(); Cages = await Data.GetCagesAsync(); cageRates = Cages.ToDictionary(x => x.Id, x => x.DailyRate); serviceVets = Rows.ToDictionary(x => x.Id, x => x.VeterinarianId ?? 0); }
+    private async Task RegisterServiceAsync(ServiceForm.ServiceFormModel model){ try { if (model.Type == "Cita") await Data.CreateAppointmentAsync(ActorRole, new(model.Code, model.PetName, model.Date, model.DurationMinutes, model.VeterinarianId, model.ClientId)); else { if (model.CageId <= 0) throw new DomainOperationException("Selecciona una jaula para el ingreso."); await Data.CreateHospitalizationAsync(ActorRole, new(model.Code, model.PetName, model.Date, model.VeterinarianId, model.CageId, model.ClientId)); } Message = "El servicio se registró correctamente."; IsError = false; IsCreateOpen = false; await ReloadAsync(); } catch (DomainOperationException ex) { Message = ex.Message; IsError = true; } }
+    private void CloseCreate(){IsCreateOpen=false;}
+    private async Task SaveVeterinarianAsync(int serviceId){try{await Data.UpdateServiceVeterinarianAsync(ActorRole,serviceId,serviceVets.GetValueOrDefault(serviceId));Message="Veterinario actualizado correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private async Task SaveRateAsync(int cageId){ try { await Data.UpdateCageRateAsync(ActorRole, cageId, cageRates[cageId]); Message = "La tarifa se actualizó correctamente."; IsError = false; await ReloadAsync(); } catch (DomainOperationException ex) { Message = ex.Message; IsError = true; } }
+    private void UpdateRateInput(int cageId, object? value){ if (decimal.TryParse(value?.ToString(), out var rate)) cageRates[cageId] = rate; }
+    private async Task DischargeAsync(int serviceId){ try { await Data.DischargeHospitalizationAsync(ActorRole, serviceId, DateTime.Now); Message = "El ingreso se dio de alta correctamente."; IsError = false; await ReloadAsync(); } catch (DomainOperationException ex) { Message = ex.Message; IsError = true; } }
+}

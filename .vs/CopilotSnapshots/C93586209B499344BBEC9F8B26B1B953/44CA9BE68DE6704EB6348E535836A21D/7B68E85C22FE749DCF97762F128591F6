@@ -1,0 +1,37 @@
+﻿@page "/usuarios"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Usuarios | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Administración</span><h1>Usuarios</h1><p>Las cuentas nuevas comienzan como Cliente. Solo el administrador puede cambiar el rol.</p></div></div>
+@if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+@if (IsAdmin)
+{
+    <div class="form-card"><div class="form-card-header"><div><span class="page-eyebrow">Nueva cuenta</span><h2>Registrar usuario</h2></div></div><EditForm Model="NewUser" OnValidSubmit="CreateUserAsync"><DataAnnotationsValidator /><ValidationSummary /><div class="form-grid"><div class="field"><label>Nombre de usuario</label><InputText @bind-Value="NewUser.Username" maxlength="50" /></div><div class="field"><label>Nombre completo</label><InputText @bind-Value="NewUser.FullName" maxlength="100" /></div><div class="field"><label>Contraseña temporal</label><InputText type="password" @bind-Value="NewUser.Password" /></div></div><button class="saas-primary-button" type="submit"><i data-lucide="user-plus" aria-hidden="true"></i> Crear como Cliente</button></EditForm></div>
+}
+}
+@if (Rows is null)
+{
+    <div class="loading-state">Cargando usuarios...</div>
+}
+else
+{
+    <div class="data-card"><div class="data-card-header"><strong>Usuarios registrados</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Usuario</th><th>Nombre completo</th><th>Rol</th><th>Modificar rol</th></tr></thead><tbody>@foreach (var row in Rows){<tr><td class="table-primary">@row.Username</td><td>@row.FullName</td><td><span class="role-badge">@row.Role</span></td><td>@if(IsAdmin){<select value="@roleChanges[row.Id]" @onchange="e => roleChanges[row.Id] = e.Value?.ToString() ?? row.Role"><option>Cliente</option><option>Recepcionista</option><option>Veterinario</option><option>Administrador</option></select><button class="text-action" @onclick="() => ChangeRoleAsync(row.Id)">Guardar</button>}else{<span>Solo administrador</span>}</td></tr>}</tbody></table></div></div>
+}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.UserRow>? Rows;
+    private Dictionary<int, string> roleChanges = [];
+    private NewUserModel NewUser { get; set; } = new();
+    private string? Message; private bool IsError;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private bool IsAdmin => ActorRole == "Administrador";
+    protected override async Task OnInitializedAsync() => await ReloadAsync();
+    private async Task ReloadAsync(){Rows = await Data.GetUsersAsync(); roleChanges = Rows.ToDictionary(x => x.Id, x => x.Role);}
+    private async Task CreateUserAsync(){try{await Data.CreateUserAsync(ActorRole, NewUser.Username, NewUser.FullName, NewUser.Password);Message="Usuario creado con rol Cliente.";IsError=false;NewUser=new();await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private async Task ChangeRoleAsync(int id){try{await Data.SetUserRoleAsync(ActorRole,id,roleChanges[id]);Message="Rol actualizado correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private sealed class NewUserModel{[Required(ErrorMessage="El usuario es obligatorio.")]public string Username{get;set;}=string.Empty;[Required(ErrorMessage="El nombre es obligatorio.")]public string FullName{get;set;}=string.Empty;[Required,MinLength(8,ErrorMessage="Usa al menos 8 caracteres.")]public string Password{get;set;}=string.Empty;}
+}

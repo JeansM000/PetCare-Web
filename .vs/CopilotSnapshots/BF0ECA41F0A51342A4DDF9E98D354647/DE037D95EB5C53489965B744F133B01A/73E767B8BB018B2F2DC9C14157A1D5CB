@@ -1,0 +1,10 @@
+﻿@page "/mascotas"
+@attribute [Authorize(Roles = "Administrador,Recepcionista,Veterinario")]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Mascotas | PetCare</PageTitle>
+<div class="saas-page-heading"><div><span class="page-eyebrow">Pacientes</span><h1>Mascotas</h1><p>Consulta las mascotas asociadas a cada cliente.</p></div></div>
+@if (Rows is null){<div class="loading-state">Cargando mascotas...</div>}else{<div class="data-card"><div class="table-scroll"><table class="saas-table"><thead><tr><th>Cliente</th><th>Mascota</th><th>Edad</th><th>Sexo</th><th>Raza</th></tr></thead><tbody>@foreach(var row in Rows){<tr><td class="table-primary">@row.ClientName</td><td>@row.Name</td><td>@(row.Age?.ToString() ?? "—")</td><td>@(row.Sex ?? "—")</td><td>@(row.Breed ?? "—")</td></tr>}</tbody></table></div></div>}
+
+@code { private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.PetRow>? Rows; protected override async Task OnInitializedAsync()=>Rows=await Data.GetPetsAsync(); }

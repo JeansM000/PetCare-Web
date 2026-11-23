@@ -1,0 +1,165 @@
+﻿.public-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    color: #0D1933;
+}
+
+.public-shell main {
+    flex: 1;
+}
+
+.public-header {
+    width: min(1120px, calc(100% - 3rem));
+    min-height: 76px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.brand,
+.brand:visited,
+.brand:hover,
+.brand:focus {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: #0D1933;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    text-decoration: none !important;
+}
+
+.brand-mark {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: .65rem;
+    background: #D97706;
+    color: #FFFFFF;
+    font-size: 1.1rem;
+}
+
+.public-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.7rem;
+    margin-left: auto;
+}
+
+.public-nav ::deep a,
+.public-nav ::deep a:visited,
+.public-nav ::deep a:hover,
+.public-nav ::deep a:focus,
+.public-nav ::deep a.active {
+    color: #0D1933;
+    font-size: .92rem;
+    text-decoration: none !important;
+}
+
+.public-nav ::deep a:hover,
+.public-nav ::deep a:focus,
+.public-nav ::deep a.active {
+    color: #D97706;
+}
+
+.login-link,
+.login-link:visited,
+.login-link:hover,
+.login-link:focus {
+    padding: .65rem 1.1rem;
+    border: 1px solid #0D1933;
+    border-radius: .5rem;
+    color: #0D1933;
+    font-size: .92rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.login-link:hover,
+.login-link:focus {
+    background: #0D1933;
+    color: #FFFFFF;
+}
+
+.public-footer {
+    width: min(1120px, calc(100% - 3rem));
+    margin: 3rem auto 0;
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid #E0E0E0;
+    color: #667085;
+    font-size: .85rem;
+}
+
+.public-footer a,
+.public-footer a:visited,
+.public-footer a:hover,
+public-footer a:focus {
+    color: #0D1933;
+    text-decoration: none !important;
+}
+
+.public-footer a:hover,
+.public-footer a:focus {
+    color: #D97706;
+}
+
+@media (max-width: 700px) {
+    .public-header {
+        width: min(100% - 2rem, 1120px);
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem 0;
+    }
+
+    .public-nav {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: .75rem;
+    }
+
+    .public-nav ::deep a {
+        font-size: .82rem;
+    }
+
+    .public-footer {
+        width: min(100% - 2rem, 1120px);
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .public-header {
+        gap: .75rem;
+    }
+
+    .public-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        text-align: center;
+    }
+
+    .public-nav ::deep a {
+        font-size: .76rem;
+    }
+
+    .login-link {
+        margin-left: auto;
+    }
+
+    .public-footer {
+        display: grid;
+        justify-content: stretch;
+    }
+}

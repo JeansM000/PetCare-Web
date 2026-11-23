@@ -1,0 +1,28 @@
+@page "/perfil"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Mi cuenta | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Configuración</span><h1>Mi cuenta</h1><p>Actualiza tu contraseña de acceso.</p></div></div>
+@if (!string.IsNullOrEmpty(Message))
+{
+	<div class="@(IsError ? "operation-error toast-message" : "operation-success toast-message")" role="alert">@Message</div>
+}
+<div class="form-card account-card">
+	<EditForm Model="Model" OnValidSubmit="ChangeAsync" OnInvalidSubmit="ShowValidationError">
+		<DataAnnotationsValidator />
+		<div class="form-grid"><div class="field"><label>Contraseña actual</label><InputText type="password" @bind-Value="Model.CurrentPassword" /></div><div class="field"><label>Nueva contraseña</label><InputText type="password" @bind-Value="Model.NewPassword" /></div><div class="field"><label>Repetir nueva contraseña</label><InputText type="password" @bind-Value="Model.Confirmation" /></div></div>
+		<button class="saas-primary-button" type="submit">Guardar contraseña</button>
+	</EditForm>
+</div>
+
+@code {
+	[CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+	private PasswordModel Model { get; set; } = new();
+	private string? Message; private bool IsError;
+	private async Task ChangeAsync(){try{var value=AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;if(!int.TryParse(value,out var id))throw new DomainOperationException("No se pudo identificar la cuenta.");if(Model.NewPassword != Model.Confirmation)throw new DomainOperationException("Las contraseñas nuevas no coinciden.");await Data.ChangePasswordAsync(id,Model.CurrentPassword,Model.NewPassword);Message="Contraseña actualizada correctamente.";IsError=false;Model=new();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+	private void ShowValidationError(){Message="Completa todos los campos de contraseña.";IsError=true;}
+	private sealed class PasswordModel{[Required]public string CurrentPassword{get;set;}=string.Empty;[Required,MinLength(8)]public string NewPassword{get;set;}=string.Empty;[Required]public string Confirmation{get;set;}=string.Empty;}
+}

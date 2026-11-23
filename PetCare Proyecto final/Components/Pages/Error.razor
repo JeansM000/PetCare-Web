@@ -1,0 +1,29 @@
+﻿@page "/Error"
+@using System.Diagnostics
+
+<PageTitle>Error</PageTitle>
+
+<section class="not-found-page">
+    <span class="page-eyebrow">PetCare</span>
+    <h1>Algo no salió como esperábamos.</h1>
+    <p>Se produjo un error al procesar la solicitud. Puedes volver a intentarlo.</p>
+    <a class="saas-primary-button" href="/dashboard">Volver al dashboard</a>
+</section>
+
+@if (ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@RequestId</code>
+    </p>
+}
+
+@code{
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+    protected override void OnInitialized() =>
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

@@ -1,0 +1,22 @@
+﻿@page "/servicios"
+@attribute [Authorize]
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Servicios | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Operaciones</span><h1>Servicios</h1><p>Consulta citas y hospitalizaciones registradas.</p></div><button class="saas-primary-button" type="button"><i data-lucide="plus" aria-hidden="true"></i> Nuevo servicio</button></div>
+
+@if (Rows is null)
+{
+	<div class="loading-state">Cargando servicios...</div>
+}
+else
+{
+	<div class="data-card"><div class="data-card-header"><strong>Servicios registrados</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Código</th><th>Tipo</th><th>Mascota</th><th>Fecha</th><th>Veterinario</th></tr></thead><tbody>@foreach (var row in Rows)<tr><td class="table-primary">@row.Code</td><td><span class="type-badge">@row.Type</span></td><td>@row.PetName</td><td>@row.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@(row.Veterinarian ?? "Sin asignar")</td></tr></tbody></table></div></div>
+}
+
+@code {
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow>? Rows;
+
+	protected override async Task OnInitializedAsync() => Rows = await Data.GetServicesAsync();
+}

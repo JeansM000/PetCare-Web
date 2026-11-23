@@ -1,0 +1,25 @@
+﻿@page "/productos"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Productos | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Inventario</span><h1>Lotes de medicamentos</h1><p>Registra lotes y controla sus fechas de vencimiento.</p></div></div>
+@if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+@if (CanOperate){<div class="form-card"><div class="form-card-header"><div><span class="page-eyebrow">Inventario</span><h2>Registrar lote</h2></div></div><EditForm Model="NewProduct" OnValidSubmit="CreateAsync"><DataAnnotationsValidator /><ValidationSummary /><div class="form-grid"><div class="field"><label>Código</label><InputText @bind-Value="NewProduct.Code" maxlength="20" /></div><div class="field"><label>Medicamento</label><InputText @bind-Value="NewProduct.Name" maxlength="100" /></div><div class="field"><label>Número de lote</label><InputText @bind-Value="NewProduct.BatchNumber" maxlength="40" /></div><div class="field"><label>Precio unidad</label><InputNumber @bind-Value="NewProduct.UnitPrice" /></div><div class="field"><label>Vencimiento</label><InputDate @bind-Value="NewProduct.ExpirationDate" /></div><div class="field"><label>Cantidad</label><InputNumber @bind-Value="NewProduct.Quantity" /></div></div><button class="saas-primary-button" type="submit"><i data-lucide="package-plus" aria-hidden="true"></i> Registrar lote</button></EditForm></div>}
+ @if (Rows is null){<div class="loading-state">Cargando lotes...</div>}else{<div class="data-card"><div class="data-card-header"><strong>Medicamentos registrados</strong><span>@Rows.Count lotes</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Código</th><th>Medicamento</th><th>Lote</th><th>Precio</th><th>Vencimiento</th><th>Cantidad</th><th>Estado</th><th></th></tr></thead><tbody>@foreach (var row in Rows){<tr class="@(row.IsExpired ? "expired-row" : string.Empty)"><td class="table-primary">@row.Code</td><td>@row.Name</td><td>@row.BatchNumber</td><td>@row.UnitPrice.ToString("N2")</td><td>@row.ExpirationDate?.ToString("dd/MM/yyyy")</td><td>@row.Quantity</td><td><span class="@(row.IsExpired ? "cancelled-badge" : "status-badge")">@(row.IsExpired ? "Vencido" : "Vigente")</span></td><td>@if(CanOperate){<button class="danger-action" type="button" @onclick="() => DeleteAsync(row.Id)"><i data-lucide="trash-2" aria-hidden="true"></i> Borrar</button>}</td></tr>}</tbody></table></div></div>}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow>? Rows;
+    private ProductModel NewProduct { get; set; } = new(){ExpirationDate=DateTime.Today.AddMonths(6),Quantity=1};
+    private string? Message; private bool IsError;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private bool CanOperate => ActorRole is "Administrador" or "Recepcionista";
+    protected override async Task OnInitializedAsync()=>await ReloadAsync();
+    private async Task ReloadAsync()=>Rows=await Data.GetProductsAsync();
+    private async Task CreateAsync(){try{await Data.CreateProductAsync(ActorRole,new(NewProduct.Code,NewProduct.Name,NewProduct.UnitPrice,NewProduct.ExpirationDate,NewProduct.BatchNumber,NewProduct.Quantity));Message="Lote registrado correctamente.";IsError=false;NewProduct=new(){ExpirationDate=DateTime.Today.AddMonths(6),Quantity=1};await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private async Task DeleteAsync(int id){try{await Data.DeleteProductAsync(ActorRole,id);Message="Medicamento eliminado correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private sealed class ProductModel{[Required]public string Code{get;set;}=string.Empty;[Required]public string Name{get;set;}=string.Empty;[Required]public string BatchNumber{get;set;}=string.Empty;[Range(0.01,double.MaxValue)]public decimal UnitPrice{get;set;}[Required]public DateTime ExpirationDate{get;set;}[Range(1,int.MaxValue)]public int Quantity{get;set;}}
+}

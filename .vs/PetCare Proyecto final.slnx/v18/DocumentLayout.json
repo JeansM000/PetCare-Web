@@ -1,0 +1,785 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\ia.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\ia.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\diseno.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\diseno.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\servicios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\servicios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\petcareweb_migration_operaciones.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\petcareweb_migration_operaciones.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\productos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\productos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\petcareweb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\petcareweb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\reiniciar_facturas_y_medicamentos_demo.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\reiniciar_facturas_y_medicamentos_demo.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\data\\petcaredataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\data\\petcaredataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\facturas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\facturas.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\hospitalizaciones.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\hospitalizaciones.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\shared\\serviceform.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\shared\\serviceform.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-reorganizar-navegacin-y-mdulos-de-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-auditora-y-preparacin-de-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-sincronizacin-de-inventario-y-mejoras-operativas.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-responsive-y-formularios-emergentes-de-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-gestin-operativa-completa-de-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-panel-saas-protegido-para-petcare.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Usuario\\.copilot\\plans\\plan-landing-pblico-y-pginas-informativas.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\usuarios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\usuarios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\sobrenosotros.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\sobrenosotros.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\terminos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\terminos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\recursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\recursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\apphome.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\apphome.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\wwwroot\\petcare-icons.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\wwwroot\\petcare-icons.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\notfound.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\notfound.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\publiclayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\publiclayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\precios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\precios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\home.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\home.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\layout\\publiclayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\layout\\publiclayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\petcare proyecto final.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\petcare proyecto final.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\components\\pages\\perfil.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\components\\pages\\perfil.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\petcareweb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\petcareweb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\petcareweb_migration_operaciones.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\petcareweb_migration_operaciones.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|c:\\users\\usuario\\source\\repos\\petcare proyecto final\\petcare proyecto final\\database\\reiniciar_facturas_y_medicamentos_demo.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{CE79427A-DF56-50B7-43FB-B2A735B26BD7}|PetCare Proyecto final\\PetCare Proyecto final.csproj|solutionrelative:petcare proyecto final\\database\\reiniciar_facturas_y_medicamentos_demo.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DISENO.md",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\DISENO.md",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\DISENO.md",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\DISENO.md",
+              "RelativeToolTip": "PetCare Proyecto final\\DISENO.md",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T06:04:35.557Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PetCareWeb.sql ",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\PetCareWeb.sql",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Database\\PetCareWeb.sql",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\PetCareWeb.sql",
+              "RelativeToolTip": "PetCare Proyecto final\\Database\\PetCareWeb.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-11-12T04:08:44.192Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PetCareWeb_Migration_Operaciones.sql ",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\PetCareWeb_Migration_Operaciones.sql",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Database\\PetCareWeb_Migration_Operaciones.sql",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\PetCareWeb_Migration_Operaciones.sql",
+              "RelativeToolTip": "PetCare Proyecto final\\Database\\PetCareWeb_Migration_Operaciones.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-11-15T05:10:06.602Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\README.md",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\README.md",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\README.md",
+              "RelativeToolTip": "PetCare Proyecto final\\README.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T06:04:36.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Servicios.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Servicios.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Servicios.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Servicios.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Servicios.razor",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:55:50.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IA.md",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\IA.md",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\IA.md",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\IA.md",
+              "RelativeToolTip": "PetCare Proyecto final\\IA.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T06:04:36.029Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Reiniciar_Facturas_y_Medicamentos_Demo.sql ",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\Reiniciar_Facturas_y_Medicamentos_Demo.sql",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Database\\Reiniciar_Facturas_y_Medicamentos_Demo.sql",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Database\\Reiniciar_Facturas_y_Medicamentos_Demo.sql",
+              "RelativeToolTip": "PetCare Proyecto final\\Database\\Reiniciar_Facturas_y_Medicamentos_Demo.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-11-23T07:10:05.694Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Productos.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Productos.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Productos.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Productos.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Productos.razor",
+              "ViewState": "AgIAAAsAAAAAAAAAAAArwCwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:56:01.272Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PetCareDataService.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Data\\PetCareDataService.cs",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Data\\PetCareDataService.cs",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Data\\PetCareDataService.cs",
+              "RelativeToolTip": "PetCare Proyecto final\\Data\\PetCareDataService.cs",
+              "ViewState": "AgIAAA0BAAAAAAAAAAArwBwBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-12T04:50:36.42Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Facturas.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Facturas.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Facturas.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Facturas.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Facturas.razor",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAjwD8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:56:13.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "app.css",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\wwwroot\\app.css",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\wwwroot\\app.css",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\wwwroot\\app.css",
+              "RelativeToolTip": "PetCare Proyecto final\\wwwroot\\app.css",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-11-12T03:22:28.312Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Hospitalizaciones.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Hospitalizaciones.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Hospitalizaciones.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Hospitalizaciones.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Hospitalizaciones.razor",
+              "ViewState": "AgIAAA8AAAAAAAAAAADwvy0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-23T00:02:15.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ServiceForm.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Shared\\ServiceForm.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Shared\\ServiceForm.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Shared\\ServiceForm.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Shared\\ServiceForm.razor",
+              "ViewState": "AgIAABYAAAAAAAAAAAAkwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-15T05:18:01.24Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:49.38Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "plan-reorganizar-navegacin-y-mdulos-de-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-reorganizar-navegacin-y-mdulos-de-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-reorganizar-navegacin-y-mdulos-de-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-reorganizar-navegacin-y-mdulos-de-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-reorganizar-navegacin-y-mdulos-de-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-23T00:05:27.688Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "plan-auditora-y-preparacin-de-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-auditora-y-preparacin-de-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-auditora-y-preparacin-de-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-auditora-y-preparacin-de-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-auditora-y-preparacin-de-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T06:07:50.253Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "plan-sincronizacin-de-inventario-y-mejoras-operativas.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-sincronizacin-de-inventario-y-mejoras-operativas.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-sincronizacin-de-inventario-y-mejoras-operativas.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-sincronizacin-de-inventario-y-mejoras-operativas.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-sincronizacin-de-inventario-y-mejoras-operativas.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T03:37:05.074Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "Perfil.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Perfil.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Perfil.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Perfil.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Perfil.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-22T03:24:25.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "plan-landing-pblico-y-pginas-informativas.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-landing-pblico-y-pginas-informativas.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-landing-pblico-y-pginas-informativas.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-landing-pblico-y-pginas-informativas.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-landing-pblico-y-pginas-informativas.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-12T03:27:18.05Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "plan-responsive-y-formularios-emergentes-de-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-responsive-y-formularios-emergentes-de-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-responsive-y-formularios-emergentes-de-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-responsive-y-formularios-emergentes-de-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-responsive-y-formularios-emergentes-de-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-22T02:45:11.155Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "plan-panel-saas-protegido-para-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-panel-saas-protegido-para-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-panel-saas-protegido-para-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-panel-saas-protegido-para-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-panel-saas-protegido-para-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-12T05:00:52.484Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "plan-gestin-operativa-completa-de-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-gestin-operativa-completa-de-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-gestin-operativa-completa-de-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-gestin-operativa-completa-de-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-gestin-operativa-completa-de-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-15T05:39:44.517Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\Usuario\\.copilot\\plans\\plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md",
+              "ToolTip": "C:\\Users\\Usuario\\.copilot\\plans\\plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-ajustes-de-interfaz,-validacin-y-permisos-de-petcare.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-15T06:45:03.286Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Usuarios.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Usuarios.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Usuarios.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Usuarios.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Usuarios.razor",
+              "ViewState": "AgIAAAQAAAAAAAAAAEBVwDQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:55:40.646Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "SobreNosotros.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\SobreNosotros.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\SobreNosotros.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\SobreNosotros.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\SobreNosotros.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:30.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Terminos.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Terminos.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Terminos.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Terminos.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Terminos.razor",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:40.148Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAMAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:53:04.076Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Recursos.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Recursos.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Recursos.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Recursos.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Recursos.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:14.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Home.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:20:32.156Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Dashboard.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Dashboard.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Dashboard.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Dashboard.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Dashboard.razor",
+              "ViewState": "AgIAAAcAAAAAAAAAAIBJwCoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:55:25.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "AppHome.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\AppHome.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\AppHome.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\AppHome.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\AppHome.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:22:03.454Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "Error.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Error.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Error.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Error.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Error.razor",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:57:09.686Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "MainLayout.razor.css",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\MainLayout.razor.css",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\MainLayout.razor.css",
+              "ViewState": "AgIAAAgAAAAAAAAAAABBwBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-11-12T04:53:49.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Program.cs",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Program.cs",
+              "RelativeToolTip": "PetCare Proyecto final\\Program.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAABRwFIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-12T04:51:16.425Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "petcare-icons.js",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\wwwroot\\petcare-icons.js",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\wwwroot\\petcare-icons.js",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\wwwroot\\petcare-icons.js",
+              "RelativeToolTip": "PetCare Proyecto final\\wwwroot\\petcare-icons.js",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAiwBYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-11-12T05:13:51.503Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\_Imports.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\_Imports.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\_Imports.razor",
+              "ViewState": "AgIAAA4AAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:57:36.586Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "NotFound.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\NotFound.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\NotFound.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\NotFound.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\NotFound.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAASwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:57:09.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "Login.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Login.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Login.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Login.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Login.razor",
+              "ViewState": "AgIAAAQAAAAAAAAAAIBJwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:35.213Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "App.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\App.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\App.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\App.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\App.razor",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:37:48.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "NavMenu.razor.css",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\NavMenu.razor.css",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\NavMenu.razor.css",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\NavMenu.razor.css",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\NavMenu.razor.css",
+              "ViewState": "AgIAABUAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-11-12T04:54:07.866Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "PublicLayout.razor.css",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor.css",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor.css",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor.css",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor.css",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAswKUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-11-12T03:20:21.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "Precios.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Precios.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Precios.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Precios.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Precios.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:21:24.891Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "Home.razor.css",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Home.razor.css",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Pages\\Home.razor.css",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Pages\\Home.razor.css",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Pages\\Home.razor.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-11-12T03:20:55.865Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "PublicLayout.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Layout\\PublicLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T03:20:08.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\appsettings.json",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\appsettings.json",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\appsettings.json",
+              "RelativeToolTip": "PetCare Proyecto final\\appsettings.json",
+              "ViewState": "AgIAAAIAAAAAAAAAAAApwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-11-12T04:12:17.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "PetCare Proyecto final.csproj",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\PetCare Proyecto final.csproj",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\PetCare Proyecto final.csproj",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\PetCare Proyecto final.csproj",
+              "RelativeToolTip": "PetCare Proyecto final\\PetCare Proyecto final.csproj",
+              "ViewState": "AgIAAAwAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-12T04:50:13.299Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "Routes.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Routes.razor",
+              "RelativeDocumentMoniker": "PetCare Proyecto final\\Components\\Routes.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\PetCare Proyecto final\\PetCare Proyecto final\\Components\\Routes.razor",
+              "RelativeToolTip": "PetCare Proyecto final\\Components\\Routes.razor",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-12T04:37:56.339Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

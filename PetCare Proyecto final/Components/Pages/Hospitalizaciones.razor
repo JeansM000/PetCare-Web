@@ -1,0 +1,45 @@
+@page "/hospitalizaciones"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Hospitalizaciones | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Operaciones</span><h1>Hospitalizaciones</h1><p>Gestiona los ingresos y las jaulas disponibles.</p></div></div>
+@if (!string.IsNullOrEmpty(Message) && !IsCreateOpen){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+@if (CanOperate)
+{
+	<button class="saas-primary-button modal-trigger" type="button" @onclick="OpenCreate"><i data-lucide="heart-pulse" aria-hidden="true"></i> Nueva hospitalización</button>
+	@if (IsCreateOpen)
+	{
+		<div class="modal-backdrop" role="presentation" @onclick="CloseCreate"><div class="modal-panel" role="dialog" aria-modal="true" @onclick:stopPropagation="true"><div class="modal-header"><div><span class="page-eyebrow">Nuevo ingreso</span><h2>Registrar hospitalización</h2></div><button class="modal-close" type="button" aria-label="Cerrar" @onclick="CloseCreate">×</button></div>
+		@if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+		<EditForm Model="Draft" OnValidSubmit="RegisterAsync" OnInvalidSubmit="ShowValidationError"><DataAnnotationsValidator /><div class="form-grid"><div class="field"><label>Código automático</label><input class="readonly-field" value="HOSP-######" readonly /></div><div class="field"><label>Nombre de mascota</label><InputText @bind-Value="Draft.PetName" maxlength="80" /></div><div class="field"><label>Fecha y hora de ingreso</label><InputDate @bind-Value="Draft.AdmissionDate" Type="InputDateType.DateTimeLocal" /></div><div class="field"><label>Cliente <span class="optional-field">(opcional)</span></label><InputSelect @bind-Value="Draft.ClientId"><option value="0">Sin asignar</option>@foreach(var client in Clients){<option value="@client.Id">@client.Name</option>}</InputSelect></div><div class="field"><label>Veterinario <span class="optional-field">(opcional)</span></label><InputSelect @bind-Value="Draft.VeterinarianId"><option value="0">Asignar después</option>@foreach(var vet in Veterinarians){<option value="@vet.Id">@vet.Name</option>}</InputSelect></div><div class="field"><label>Jaula</label><InputSelect @bind-Value="Draft.CageId"><option value="0">Selecciona una jaula</option>@foreach(var cage in Cages.Where(x => x.Active)){<option value="@cage.Id">@cage.Size - @cage.DailyRate.ToString("N0") diarios</option>}</InputSelect></div></div><button class="saas-primary-button" type="submit"><i data-lucide="save" aria-hidden="true"></i> Registrar ingreso</button></EditForm>
+		</div></div>
+	}
+}
+@if (Rows is null){<div class="loading-state">Cargando hospitalizaciones...</div>}else{<div class="data-card"><div class="data-card-header"><strong>Ingresos registrados</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Código</th><th>Mascota</th><th>Ingreso</th><th>Jaula</th><th>Veterinario</th><th>Estado</th>@if (CanOperate){<th>Acción</th>}</tr></thead><tbody>@foreach(var row in Rows){<tr><td class="table-primary">@row.Code</td><td>@row.PetName</td><td>@row.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@row.CageSize</td><td>@if(CanOperate){<select class="role-select" aria-label="Veterinario para @row.Code" value="@serviceVets.GetValueOrDefault(row.Id)" @onchange="e => serviceVets[row.Id] = int.TryParse(e.Value?.ToString(), out var value) ? value : 0"><option value="0">Sin asignar</option>@foreach(var vet in Veterinarians){<option value="@vet.Id">@vet.Name</option>}</select>}else{<span>@(row.Veterinarian ?? "Sin asignar")</span>}</td><td>@if(row.DischargeDate is null){<span class="status-badge">Activa</span>}else{<span class="cancelled-badge">Alta: @row.DischargeDate.Value.ToString("dd/MM/yyyy")</span>}</td>@if (CanOperate){<td><button class="text-action" @onclick="() => SaveVeterinarianAsync(row.Id)">Confirmar veterinario</button>@if(row.DischargeDate is null){<button class="text-action" @onclick="() => DischargeAsync(row.Id)">Dar de alta</button>}</td>}</tr>}</tbody></table></div></div>}
+
+@code {
+	[CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow>? Rows;
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.VetOption> Veterinarians = [];
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ClientOption> Clients = [];
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.CageRow> Cages = [];
+	private Dictionary<int, int> serviceVets = [];
+	private HospitalizationModel Draft { get; set; } = NewModel();
+	private string? Message; private bool IsError; private bool IsCreateOpen;
+	private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+	private int ActorId => int.TryParse(AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+	private bool CanOperate => ActorRole is "Director" or "Recepcionista" or "Veterinario";
+	protected override async Task OnInitializedAsync() => await ReloadAsync();
+	private async Task ReloadAsync(){Rows=(await Data.GetServicesAsync(ActorRole,ActorId)).Where(x=>x.Type=="Hospitalizacion").ToList();Veterinarians=await Data.GetVeterinariansAsync();Clients=await Data.GetClientsAsync();Cages=await Data.GetCagesAsync();serviceVets=Rows.ToDictionary(x=>x.Id,x=>x.VeterinarianId??0);}
+	private async Task RegisterAsync(){try{if(Draft.CageId<=0)throw new DomainOperationException("Selecciona una jaula para el ingreso.");await Data.CreateHospitalizationAsync(ActorRole,new(Draft.Code,Draft.PetName,Draft.AdmissionDate,Draft.VeterinarianId,Draft.CageId,Draft.ClientId));Message="La hospitalización se registró correctamente.";IsError=false;IsCreateOpen=false;Draft=NewModel();await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+	private async Task SaveVeterinarianAsync(int serviceId){try{await Data.UpdateServiceVeterinarianAsync(ActorRole,serviceId,serviceVets.GetValueOrDefault(serviceId));Message="Veterinario actualizado correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+	private async Task DischargeAsync(int serviceId){try{await Data.DischargeHospitalizationAsync(ActorRole,serviceId,DateTime.Now);Message="El ingreso se dio de alta correctamente.";IsError=false;await ReloadAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+	private void OpenCreate(){Message=null;IsCreateOpen=true;}
+	private void CloseCreate()=>IsCreateOpen=false;
+	private void ShowValidationError(){Message="Completa la mascota, la fecha y selecciona una jaula. El código se genera automáticamente.";IsError=true;}
+	private static HospitalizationModel NewModel()=>new(){AdmissionDate=DateTime.Now.AddHours(1)};
+	private sealed class HospitalizationModel{public string Code{get;set;}="";[Required]public string PetName{get;set;}=string.Empty;[Required]public DateTime AdmissionDate{get;set;}public int VeterinarianId{get;set;}public int CageId{get;set;}public int ClientId{get;set;}}
+}

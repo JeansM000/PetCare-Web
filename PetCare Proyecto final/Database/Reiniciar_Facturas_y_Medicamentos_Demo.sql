@@ -1,0 +1,110 @@
+USE PetCareWeb;
+GO
+
+/*
+  Reinicio de datos de desarrollo.
+  Elimina facturas y medicamentos, pero conserva usuarios, servicios,
+  hospitalizaciones y jaulas.
+*/
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
+
+/* La nueva funcionalidad de facturación necesita identificar al pagador. */
+IF COL_LENGTH(N'dbo.Facturas', N'ClienteId') IS NULL
+	ALTER TABLE dbo.Facturas ADD ClienteId INT NULL;
+
+IF NOT EXISTS (
+	SELECT 1 FROM sys.foreign_keys
+	WHERE name = N'FK_Facturas_Clientes'
+	  AND parent_object_id = OBJECT_ID(N'dbo.Facturas')
+)
+	ALTER TABLE dbo.Facturas
+	ADD CONSTRAINT FK_Facturas_Clientes
+	FOREIGN KEY (ClienteId) REFERENCES dbo.Usuarios(Id);
+
+/* Se eliminan primero las líneas por la relación con Facturas. */
+DELETE FROM dbo.LineasFactura;
+DELETE FROM dbo.Facturas;
+DELETE FROM dbo.Productos;
+
+/* Clientes de prueba para seleccionar quién paga la factura.
+   La contraseña temporal coincide con la de los usuarios de desarrollo
+   documentados en README.md. */
+IF NOT EXISTS (SELECT 1 FROM dbo.Usuarios WHERE Nombreusuario = N'cliente01')
+	INSERT INTO dbo.Usuarios (Nombreusuario, NombreCompleto, ContrasenaHash, Rol)
+	VALUES (N'cliente01', N'Ana García López', N'PBKDF2-SHA256$100000$M7JQnaCnOyC+SndWe08FNw==$1JCf5BgbEQuOiCni3VKCmKkDB9V29hT2UbOOYRALm8g=', N'Cliente');
+
+IF NOT EXISTS (SELECT 1 FROM dbo.Usuarios WHERE Nombreusuario = N'cliente02')
+	INSERT INTO dbo.Usuarios (Nombreusuario, NombreCompleto, ContrasenaHash, Rol)
+	VALUES (N'cliente02', N'Carlos Martínez Ruiz', N'PBKDF2-SHA256$100000$M7JQnaCnOyC+SndWe08FNw==$1JCf5BgbEQuOiCni3VKCmKkDB9V29hT2UbOOYRALm8g=', N'Cliente');
+
+IF NOT EXISTS (SELECT 1 FROM dbo.Usuarios WHERE Nombreusuario = N'cliente03')
+	INSERT INTO dbo.Usuarios (Nombreusuario, NombreCompleto, ContrasenaHash, Rol)
+	VALUES (N'cliente03', N'Laura Fernández Díaz', N'PBKDF2-SHA256$100000$M7JQnaCnOyC+SndWe08FNw==$1JCf5BgbEQuOiCni3VKCmKkDB9V29hT2UbOOYRALm8g=', N'Cliente');
+
+/* 5 lotes vencidos y 30 lotes vigentes, con medicamentos reales. */
+DECLARE @Medicamentos TABLE
+(
+	Numero INT NOT NULL,
+	Nombre NVARCHAR(100) NOT NULL,
+	DiasVencimiento INT NOT NULL
+);
+
+INSERT INTO @Medicamentos (Numero, Nombre, DiasVencimiento) VALUES
+(1, N'Amoxicilina 500 mg', -30),
+(2, N'Enrofloxacina 50 mg', -20),
+(3, N'Meloxicam 1.5 mg/ml', -15),
+(4, N'Prednisona 5 mg', -10),
+(5, N'Ivermectina 6 mg', -5),
+(6, N'Clavulanato de amoxicilina 250/62.5 mg', 30),
+(7, N'Cefalexina 300 mg', 45),
+(8, N'Metronidazol 250 mg', 60),
+(9, N'Doxiciclina 100 mg', 75),
+(10, N'Enrofloxacina 150 mg', 90),
+(11, N'Marbofloxacino 20 mg', 105),
+(12, N'Carprofeno 100 mg', 120),
+(13, N'Meloxicam 0.5 mg', 135),
+(14, N'Firocoxib 57 mg', 150),
+(15, N'Prednisona 20 mg', 165),
+(16, N'Prednisolona 5 mg', 180),
+(17, N'Gabapentina 100 mg', 195),
+(18, N'Tramadol 50 mg', 210),
+(19, N'Fenobarbital 50 mg', 225),
+(20, N'Omeprazol 20 mg', 240),
+(21, N'Famotidina 20 mg', 255),
+(22, N'Maropitant 16 mg', 270),
+(23, N'Bromuro de butilhioscina 10 mg', 285),
+(24, N'Furosemida 40 mg', 300),
+(25, N'Benazepril 5 mg', 315),
+(26, N'Enalapril 10 mg', 330),
+(27, N'Digoxina 0.25 mg', 345),
+(28, N'Clorhexidina 2%', 360),
+(29, N'Povidona yodada 10%', 375),
+(30, N'Sulfadiazina de plata 1%', 390),
+(31, N'Ranitidina 150 mg', 405),
+(32, N'Cetirizina 10 mg', 420),
+(33, N'Prazicuantel 50 mg', 435),
+(34, N'Pirantel 50 mg', 450),
+(35, N'Fenbendazol 100 mg', 465);
+
+INSERT INTO dbo.Productos
+	(Codigo, Tipo, Nombre, PrecioUnidad, FechaVencimiento, NumeroLote, CantidadDisponible)
+SELECT
+	CONCAT(N'MED-', RIGHT(CONCAT(N'000000', Numero), 6)),
+	N'LoteMedicamento',
+	Nombre,
+	CAST(5000 + (Numero * 750) AS DECIMAL(18,2)),
+	DATEADD(DAY, DiasVencimiento, CAST(GETDATE() AS DATE)),
+	CONCAT(N'LOTE-', RIGHT(CONCAT(N'000000', Numero), 6)),
+	20 + Numero
+FROM @Medicamentos;
+
+COMMIT TRANSACTION;
+GO
+
+SELECT N'Reinicio completado' AS Resultado;
+SELECT COUNT(*) AS TotalMedicamentos FROM dbo.Productos;
+SELECT COUNT(*) AS Vencidos FROM dbo.Productos WHERE FechaVencimiento < CAST(GETDATE() AS DATE);
+SELECT COUNT(*) AS Vigentes FROM dbo.Productos WHERE FechaVencimiento >= CAST(GETDATE() AS DATE);
+SELECT COUNT(*) AS ClientesDisponibles FROM dbo.Usuarios WHERE Rol = N'Cliente';
+GO

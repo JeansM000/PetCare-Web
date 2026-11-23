@@ -1,0 +1,22 @@
+﻿@page "/facturas"
+@attribute [Authorize]
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Facturas | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Facturación</span><h1>Facturas</h1><p>Consulta la facturación generada en PetCare.</p></div><button class="saas-primary-button" type="button"><i data-lucide="file-plus-2" aria-hidden="true"></i> Nueva factura</button></div>
+
+@if (Rows is null)
+{
+	<div class="loading-state">Cargando facturas...</div>
+}
+else
+{
+	<div class="data-card"><div class="data-card-header"><strong>Facturas emitidas</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Emitida por</th><th>Estado</th></tr></thead><tbody>@foreach (var row in Rows)<tr><td class="table-primary">@row.Number</td><td>@row.IssuedAt.ToString("dd/MM/yyyy HH:mm")</td><td>@row.Customer</td><td>@row.IssuedBy</td><td><span class="@(row.IsCancelled ? "cancelled-badge" : "status-badge")">@(row.IsCancelled ? "Anulada" : "Emitida")</span></td></tr></tbody></table></div></div>
+}
+
+@code {
+	private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.InvoiceRow>? Rows;
+
+	protected override async Task OnInitializedAsync() => Rows = await Data.GetInvoicesAsync();
+}

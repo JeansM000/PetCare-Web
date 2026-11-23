@@ -1,0 +1,63 @@
+@page "/facturas"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject PetCare_Proyecto_final.Data.PetCareDataService Data
+
+<PageTitle>Facturas | PetCare</PageTitle>
+
+<div class="saas-page-heading"><div><span class="page-eyebrow">Facturación</span><h1>Facturas</h1><p>Busca, crea, consulta y anula facturas.</p></div></div>
+@if (!string.IsNullOrEmpty(Message) && !IsCreateOpen){<div class="@(IsError ? "operation-error toast-message" : "operation-success toast-message")" role="alert">@Message</div>}
+
+@if (CanOperate)
+{
+    <button class="saas-primary-button modal-trigger" type="button" @onclick="OpenCreate"><i data-lucide="file-plus-2" aria-hidden="true"></i> Nueva factura</button>
+    @if (IsCreateOpen)
+    {
+    <div class="modal-backdrop" role="presentation" @onclick="CloseCreate"><div class="modal-panel invoice-modal" role="dialog" aria-modal="true" aria-labelledby="new-invoice-title" @onclick:stopPropagation="true"><div class="modal-header"><div><span class="page-eyebrow">Nueva factura</span><h2 id="new-invoice-title">Crear factura</h2><p class="modal-subtitle">Completa los datos del cliente y añade los conceptos del recibo.</p></div><button class="modal-close" type="button" aria-label="Cerrar" @onclick="CloseCreate">×</button></div>
+    <div class="form-card invoice-form-card">
+        @if (!string.IsNullOrEmpty(Message)){<div class="@(IsError ? "operation-error" : "operation-success")" role="alert">@Message</div>}
+        <EditForm Model="Draft" OnValidSubmit="CreateAsync" OnInvalidSubmit="ShowInvoiceValidationError">
+            <DataAnnotationsValidator />
+            <section class="invoice-section"><div class="invoice-section-heading"><span class="section-number">01</span><div><h3>Datos de la factura</h3><p>El emisor es quien genera el recibo y el cliente es quien paga.</p></div></div><div class="form-grid"><div class="field"><label>Número automático</label><input class="readonly-field" value="FAC-######" readonly /></div><div class="field"><label>Usuario emisor</label><input class="readonly-field" value="@CurrentUserName" readonly /><small class="field-help">Genera y entrega el recibo.</small></div><div class="field"><label>Cliente pagador</label><InputSelect @bind-Value="Draft.ClientId"><option value="0">Selecciona el cliente que paga</option>@foreach(var client in Clients){<option value="@client.Id">@client.Name</option>}</InputSelect><small class="field-help">Responsable del pago.</small></div></div></section>
+            <section class="invoice-section"><div class="invoice-section-heading"><span class="section-number">02</span><div><h3>Conceptos</h3><p>Selecciona un servicio o medicamento y añádelo al detalle.</p></div></div><div class="line-editor"><div class="field"><label>Origen</label><InputSelect @bind-Value="NewLine.Kind"><option value="Servicio">Servicio</option><option value="Producto">Medicamento</option></InputSelect></div><div class="field line-item-field"><label>Elemento</label><InputSelect @bind-Value="NewLine.ItemId"><option value="0">Selecciona</option>@if(NewLine.Kind == "Servicio"){foreach(var item in Services){<option value="@item.Id">@item.Code - @item.PetName</option>}}else{foreach(var item in Products){<option value="@item.Id">@item.Code - @item.Name (@(item.IsExpired ? "Vencido" : "Vigente"))</option>}}</InputSelect></div>@if(NewLine.Kind == "Producto"){<div class="field quantity-field"><label>Cantidad</label><InputNumber @bind-Value="NewLine.Quantity" /></div>}<button class="add-line-button" type="button" @onclick="AddLine"><i data-lucide="plus-circle" aria-hidden="true"></i><span>Añadir al detalle</span></button></div><ul class="invoice-lines">@foreach(var line in Lines){<li><span>@line.Description x @line.Quantity</span><strong>@((line.Quantity * line.UnitPrice).ToString("N2"))</strong></li>}</ul></section>
+            <div class="invoice-footer"><div class="invoice-total">Total <strong>@(Lines.Sum(x => x.Quantity * x.UnitPrice).ToString("N2"))</strong></div><button class="saas-primary-button invoice-submit" type="submit"><i data-lucide="file-plus-2" aria-hidden="true"></i> Generar factura</button></div>
+        </EditForm>
+    </div></div></div>
+    }
+}
+
+<div class="search-bar"><label for="invoice-search">Buscar por número o cliente<input id="invoice-search" @bind="Search" @onkeydown="SearchOnEnter" placeholder="Escribe y pulsa Enter" /></label><button class="saas-primary-button" type="button" @onclick="SearchAsync"><i data-lucide="search" aria-hidden="true"></i> Buscar</button></div>
+@if (Rows is null){<div class="loading-state">Cargando facturas...</div>}else{<div class="data-card"><div class="data-card-header"><strong>Facturas emitidas</strong><span>@Rows.Count registros</span></div><div class="table-scroll"><table class="saas-table"><thead><tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Emisor</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>@if(Rows.Count == 0){<tr><td colspan="7">No se encontraron facturas@(string.IsNullOrWhiteSpace(Search) ? "." : $" para «{Search}».")</td></tr>}@foreach(var row in Rows){<tr><td class="table-primary">@row.Number</td><td>@row.IssuedAt.ToString("dd/MM/yyyy HH:mm")</td><td>@row.Customer</td><td>@row.IssuedBy</td><td>@row.Total.ToString("N0")</td><td><span class="@(row.IsCancelled ? "cancelled-badge" : "status-badge")">@(row.IsCancelled ? "Anulada" : "Emitida")</span></td><td><button class="text-action" @onclick="() => ShowDetailAsync(row.Id)">Detalle</button>@if(!row.IsCancelled && IsAdmin){if(ConfirmCancelId == row.Id){<button class="danger-action" @onclick="() => CancelAsync(row.Id)">Confirmar anulación</button>}else{<button class="text-action danger-text" @onclick="() => ConfirmCancelId = row.Id">Anular</button>}}</td></tr>}</tbody></table></div></div>}
+@if (Detail is not null){<div class="detail-card"><div class="data-card-header"><strong>Detalle @Detail.Number</strong><button class="text-action" type="button" @onclick="() => Detail = null">Cerrar</button></div><p>Cliente: @Detail.Customer · Estado: @(Detail.IsCancelled ? "Anulada" : "Emitida")</p><ul class="invoice-lines">@foreach(var line in Detail.Lines){<li><span>@line.Code - @line.Description x @line.Quantity</span><strong>@((line.Quantity * line.UnitPrice).ToString("N2"))</strong></li>}</ul><div class="invoice-total">Total: <strong>@(Detail.Lines.Sum(x => x.Quantity * x.UnitPrice).ToString("N2"))</strong></div></div>}
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.InvoiceRow>? Rows;
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow> Services = [];
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ProductRow> Products = [];
+    private IReadOnlyList<PetCare_Proyecto_final.Data.PetCareDataService.ClientOption> Clients = [];
+    private List<LineModel> Lines = [];
+    private InvoiceDraftModel Draft { get; set; } = new();
+    private NewLineModel NewLine { get; set; } = new();
+    private PetCare_Proyecto_final.Data.PetCareDataService.InvoiceDetail? Detail;
+    private string Search = string.Empty; private string? Message; private bool IsError; private int? ConfirmCancelId; private bool IsCreateOpen;
+    private string ActorRole => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? string.Empty;
+    private int ActorId => int.TryParse(AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+    private string CurrentUserName => AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value ?? AuthenticationState?.Result.User.Identity?.Name ?? string.Empty;
+    private bool IsAdmin => ActorRole == "Director"; private bool CanOperate => ActorRole is "Director" or "Recepcionista";
+    protected override async Task OnInitializedAsync(){Services=await Data.GetServicesAsync(ActorRole, ActorId);Products=ActorRole == "Cliente" ? [] : await Data.GetProductsAsync();Clients=await Data.GetClientsAsync();await SearchAsync();}
+    private async Task SearchAsync()=>Rows=await Data.SearchInvoicesAsync(Search, ActorRole, ActorId);
+    private async Task SearchOnEnter(KeyboardEventArgs args){if(args.Key=="Enter")await SearchAsync();}
+    private void AddLine(){if(NewLine.ItemId<=0){Message="Selecciona un servicio o medicamento antes de añadirlo.";IsError=true;return;}if(NewLine.Kind=="Servicio"){var item=Services.FirstOrDefault(x=>x.Id==NewLine.ItemId);if(item is null)return;var price=item.Type=="Cita"?60000m+(item.DurationMinutes.GetValueOrDefault() > 30 ? (item.DurationMinutes.GetValueOrDefault()-30)*1500m : 0) : GetHospitalizationDays(item)*item.DailyRate.GetValueOrDefault();var description=item.Type=="Cita"?$"Consulta - {item.PetName} - {item.Date:dd/MM/yyyy HH:mm} - {item.Veterinarian ?? "Sin veterinario"}":$"Hospitalización - {item.PetName} - {GetHospitalizationDays(item)} días - {item.Date:dd/MM/yyyy HH:mm}";Lines.Add(new(item.Id,null,1,price,description));}else{var item=Products.FirstOrDefault(x=>x.Id==NewLine.ItemId);if(item is null)return;if(item.IsExpired){Message="No se puede vender un medicamento vencido.";IsError=true;return;}if(NewLine.Quantity<=0 || NewLine.Quantity>item.Quantity){Message="La cantidad debe ser mayor que cero y no superar las existencias.";IsError=true;return;}Lines.Add(new(null,item.Id,NewLine.Quantity,item.UnitPrice,$"{item.Name} - Lote {item.BatchNumber}"));}NewLine=new();Message=null;}
+    private static int GetHospitalizationDays(PetCare_Proyecto_final.Data.PetCareDataService.ServiceRow item){var end=item.DischargeDate??DateTime.Now;var days=(end.Date-item.Date.Date).Days;return Math.Max(1,days);}
+    private void ShowInvoiceValidationError(){Message=Draft.ClientId <= 0 ? "Selecciona el cliente que pagará la factura." : "Añade al menos un servicio o medicamento.";IsError=true;}
+    private void RemoveLine(LineModel line)=>Lines.Remove(line);
+    private async Task CreateAsync(){try{var issuer=AuthenticationState?.Result.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;if(!int.TryParse(issuer,out var issuerId))throw new DomainOperationException("No se pudo identificar al usuario emisor.");await Data.CreateInvoiceAsync(ActorRole,Draft.ClientId,issuerId,Lines.Select(x=>new PetCare_Proyecto_final.Data.PetCareDataService.InvoiceLineInput(x.ServiceId,x.ProductId,x.Quantity,x.UnitPrice)).ToList());Message="Factura creada correctamente.";IsError=false;Draft=new();Lines=[];IsCreateOpen=false;await SearchAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private void OpenCreate(){Message=null;IsCreateOpen=true;}
+    private void CloseCreate(){IsCreateOpen=false;}
+    private async Task ShowDetailAsync(int id)=>Detail=await Data.GetInvoiceDetailAsync(id);
+    private async Task CancelAsync(int id){try{await Data.CancelInvoiceAsync(ActorRole,id);Message="Factura anulada correctamente.";IsError=false;ConfirmCancelId=null;await SearchAsync();}catch(DomainOperationException ex){Message=ex.Message;IsError=true;}}
+    private sealed class InvoiceDraftModel{public int ClientId{get;set;}}
+    private sealed class NewLineModel{public string Kind{get;set;}="Servicio";public int ItemId{get;set;}public int Quantity{get;set;}=1;}
+    private sealed class LineModel(int? serviceId,int? productId,int quantity,decimal unitPrice,string description){public int? ServiceId{get;}=serviceId;public int? ProductId{get;}=productId;public int Quantity{get;}=quantity;public decimal UnitPrice{get;}=unitPrice;public string Description{get;}=description;}
+}

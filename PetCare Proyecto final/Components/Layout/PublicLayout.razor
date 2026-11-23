@@ -1,0 +1,25 @@
+@inherits LayoutComponentBase
+
+<div class="public-shell">
+	<header class="public-header">
+		<a class="brand" href="/" aria-label="PetCare inicio">
+			<span class="brand-mark">✦</span>
+			<span>PetCare</span>
+		</a>
+		<nav class="public-nav" aria-label="Navegación principal">
+			<NavLink href="recursos">Recursos</NavLink>
+			<NavLink href="precios">Precios</NavLink>
+			<NavLink href="sobre-nosotros">Sobre nosotros</NavLink>
+		</nav>
+		<a class="login-link" href="login">Iniciar sesión</a>
+	</header>
+
+	<main>
+		@Body
+	</main>
+
+	<footer class="public-footer">
+		<span>© @DateTime.Now.Year PetCare</span>
+		<a href="terminos">Términos y condiciones</a>
+	</footer>
+</div>
