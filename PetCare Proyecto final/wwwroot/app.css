@@ -374,6 +374,22 @@ h1:focus {
     font: inherit;
 }
 
+/* Igualar verticalmente el selector de veterinario al resto de controles. */
+#veterinarian {
+    height: 2.5rem;
+    min-height: 2.5rem;
+    padding-top: .45rem;
+    padding-bottom: .45rem;
+    line-height: 1.2;
+    box-sizing: border-box;
+}
+
+.appointment-grid .field > label {
+    min-height: 2.2rem;
+    display: flex;
+    align-items: flex-start;
+}
+
 .login-form button {
     display: inline-flex;
     align-items: center;

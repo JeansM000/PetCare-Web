@@ -214,6 +214,7 @@ public sealed class PetCareDataService(IConfiguration configuration)
     {
         EnsureCanOperate(actorRole);
         ValidateText(input.PetName, "El nombre de la mascota", 80);
+        if (input.Date == default || input.Date < DateTime.Now) throw new DomainOperationException("No se puede registrar una cita con fecha u hora anterior a la actual.");
         if (input.DurationMinutes < 15 || input.DurationMinutes > 180) throw new DomainOperationException("La duración de una cita debe estar entre 15 y 180 minutos.");
         await using var connection = await OpenConnectionAsync();
         await using var command = new SqlCommand("INSERT INTO dbo.Servicios (Codigo, Tipo, NombreMascota, Fecha, DuracionMinutos, VeterinarioAsignado, VeterinarioId, ClienteId) VALUES (CONCAT('SER-', RIGHT(CONCAT('000000', NEXT VALUE FOR dbo.SecuenciaServicios), 6)), 'Cita', @pet, @date, @duration, (SELECT NombreCompleto FROM dbo.Usuarios WHERE Id = NULLIF(@vet, 0)), NULLIF(@vet, 0), NULLIF(@client, 0))", connection);
