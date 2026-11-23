@@ -1,0 +1,30 @@
+﻿@page "/login"
+@layout PublicLayout
+
+<PageTitle>Iniciar sesión | PetCare</PageTitle>
+
+<section class="login-shell">
+	<div class="login-visual"><span class="login-brand-mark"><i data-lucide="heart-pulse" aria-hidden="true"></i></span><span class="login-brand">PetCare</span><h1>El cuidado empieza aquí.</h1><p>Gestiona citas, hospitalizaciones y facturación desde un solo lugar.</p><div class="login-visual-detail"><i data-lucide="shield-check" aria-hidden="true"></i><span>Acceso seguro para cada rol</span></div></div>
+	<div class="login-card">
+	<span class="page-eyebrow">Bienvenido de nuevo</span>
+	<h2>Inicia sesión</h2>
+	<p class="login-intro">Accede a tu espacio de trabajo PetCare.</p>
+	@if (Error is not null)
+	{
+		<p class="login-error" role="alert">El usuario o la contraseña no son correctos.</p>
+	}
+	<form class="login-form" method="post" action="/account/login">
+		<AntiforgeryToken />
+		<label for="username">Usuario</label>
+		<input id="username" name="username" type="text" maxlength="50" autocomplete="username" placeholder="admin" required pattern="[A-Za-z0-9_]{3,50}" />
+		<label for="password">Contraseña</label>
+		<input id="password" name="password" type="password" maxlength="200" autocomplete="current-password" placeholder="Tu contraseña" required />
+		<button type="submit" class="primary-action login-submit"><span>Iniciar sesión</span><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+	</form>
+	</div>
+</section>
+
+@code {
+	[SupplyParameterFromQuery(Name = "error")]
+	private string? Error { get; set; }
+}

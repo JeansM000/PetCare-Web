@@ -120,4 +120,5 @@ C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\
 C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\PetCare Proyecto final.genruntimeconfig.cache
 C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\ref\PetCare_Proyecto_final.dll
 C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\compressed\ce9k46l19w-{0}-sy6t4vs31b-sy6t4vs31b.gz
+C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\PetCare Proyecto final.sourcelink.json
+C:\Users\Usuario\source\repos\PetCare Proyecto final\PetCare Proyecto final\obj\Debug\net10.0\compressed\ce9k46l19w-{0}-t7rr4o1y5g-t7rr4o1y5g.gz

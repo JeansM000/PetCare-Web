@@ -151,7 +151,9 @@ public sealed class PetCareDataService(IConfiguration configuration)
 
     public async Task CreateUserAsync(string actorRole, string username, string fullName, string password)
     {
-        EnsureAdmin(actorRole);
+        actorRole = NormalizeRole(actorRole);
+        if (actorRole is not ("Director" or "Recepcionista"))
+            throw new DomainOperationException("Solo el Director o la recepción pueden crear usuarios.");
         if (!Regex.IsMatch(username ?? string.Empty, "^[A-Za-z0-9_]{3,50}$") || !IsSafeText(fullName, 100) || password.Length < 8)
             throw new DomainOperationException("El usuario, nombre completo y una contraseña de al menos 8 caracteres son obligatorios.");
 
